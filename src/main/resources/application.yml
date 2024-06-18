@@ -1,0 +1,51 @@
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-expire-time: ${ACCESS_EXPIRE_TIME}
+  refresh-expire-time: ${REFRESH_EXPIRE_TIME}
+
+# 테스트
+spring:
+  application:
+    name: code3line
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://127.0.0.1:3306/code3line
+    username: ${MYSQL_USER}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  # OAuth 로그인
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${SOCIAL_GOOGLE_CLIENT_ID}
+            client-secret: ${SOCIAL_GOOGLE_CLIENT_SECRET}
+          naver:
+            client-id: ${SOCIAL_NAVER_CLIENT_ID}
+            client-secret: ${SOCIAL_NAVER_CLIENT_SECRET}
+          kakao:
+            client-id: ${SOCIAL_KAKAO_CLIENT_ID}
+            client-secret: ${SOCIAL_KAKAO_CLIENT_SECRET}
+  # mail 인증
+  mail:
+    host: stmp.gmail.com
+    password: ${SMTP_APP_PASSWORD}
+    port: 587
+    properties:
+      mail:
+        smtp: true
+        connectiontimeout: 5000
+        starttls:
+          enable: true
+          required: true
+        timeout: 5000
+        writetimeout: 5000
+    username: ${SMTP_EMAIL}
