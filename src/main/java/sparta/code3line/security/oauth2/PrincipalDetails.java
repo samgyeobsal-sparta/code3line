@@ -1,4 +1,5 @@
-package sparta.code3line.security;
+package sparta.code3line.security.oauth2;
+
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,16 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
-public class UserPrincipal implements UserDetails, OAuth2User {
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private final User user;
+
+    private Map<String, Object> attributes;
+
+    public PrincipalDetails(User user, Map<String, Object> attributes){
+        this.user = user;
+        this.attributes = attributes;
+    }
 
     @Override
     public Map<String, Object> getAttributes() {
