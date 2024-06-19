@@ -44,4 +44,27 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     public String getName() {
         return user.getNickname();
     }
+    // 계정이 만료 되었는지 (true: 만료X)
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    // 계정이 잠겼는지 (true: 잠기지 않음)
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    // 비밀번호가 만료되었는지 (true: 만료X)
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    // 계정이 활성화(사용가능)인지 (true: 활성화)
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

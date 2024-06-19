@@ -41,6 +41,13 @@ public class SecurityConfig {
 
         http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
 
+        http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                .loginPage("/templates/login.html")
+                .defaultSuccessUrl("/")
+        );
+
+
         return http.build();
     }
+
 }
