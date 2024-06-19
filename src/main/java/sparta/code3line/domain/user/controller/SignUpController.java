@@ -1,9 +1,7 @@
 package sparta.code3line.domain.user.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import sparta.code3line.domain.user.dto.SignUpRequestDto;
 import sparta.code3line.domain.user.service.SignUpService;
 import sparta.code3line.domain.user.service.UserService;
 

@@ -47,6 +47,8 @@ public class User {
         this.role = role;
         this.status = status;
     }
+
+
     public enum Role {
         NORMAL,
         ADMIN;
