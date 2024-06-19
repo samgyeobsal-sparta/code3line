@@ -28,7 +28,7 @@ spring:
           google:
             client-id: ${SOCIAL_GOOGLE_CLIENT_ID}
             client-secret: ${SOCIAL_GOOGLE_CLIENT_SECRET}
-            scope : email
+            scope: email
 
           naver:
             client-id: ${SOCIAL_NAVER_CLIENT_ID}
@@ -70,7 +70,7 @@ spring:
 # mail 인증
 
 #mail:
-#host: stmp.gmail.com
+#host: smtp.gmail.com
   #  password: ${SMTP_APP_PASSWORD}
   #  port: 587
   #  properties:
