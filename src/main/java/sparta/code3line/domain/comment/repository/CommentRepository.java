@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Optional<List<Comment>> findAllbyBoardId(Long boardId);
+    Optional<List<Comment>> findAllByBoardId(Long boardId);
 }

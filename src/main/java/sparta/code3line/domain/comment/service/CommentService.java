@@ -28,7 +28,7 @@ public class CommentService {
     private final ModelMapper mapper = new ModelMapper();
 
     public CommentResponseDto createComment(Long boardId, User user, CommentRequestDto requestDto) {
-        Board board = boardRepository.findByBoardId(boardId).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ErrorCode.BOARD_NOT_FOUND)
         );
 
@@ -42,13 +42,13 @@ public class CommentService {
 
         return CommentResponseDto.builder()
                 .userId(user.getId())
-                .boardId(board.getBoardId())
+                .boardId(board.getId())
                 .contents(requestDto.getContents())
                 .build();
     }
 
     public List<CommentResponseDto> readComments(Long boardId) {
-        List<Comment> comments = commentRepository.findAllbyBoardId(boardId).orElse(null);
+        List<Comment> comments = commentRepository.findAllByBoardId(boardId).orElse(null);
         List<CommentResponseDto> responseDtos = new ArrayList<>();
 
         if(comments != null) {
@@ -84,7 +84,7 @@ public class CommentService {
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        if (!comment.getBoard().getBoardId().equals(boardId) || !comment.getUser().equals(user)) {
+        if (!comment.getBoard().getId().equals(boardId) || !comment.getUser().equals(user)) {
             throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
