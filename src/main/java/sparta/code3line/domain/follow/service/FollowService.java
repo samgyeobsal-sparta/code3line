@@ -1,8 +1,6 @@
 package sparta.code3line.domain.follow.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.domain.follow.dto.FollowResponseDto;
@@ -11,9 +9,7 @@ import sparta.code3line.domain.follow.repository.FollowRepository;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static sparta.code3line.common.exception.ErrorCode.*;
@@ -31,12 +27,12 @@ public class FollowService {
             throw new CustomException(USERNAME_NOT_FOUND);
         }
 
-        Optional<Follow> checkFollow = followRepository.findByFollowingIdAndFollowerId(followingUserId, follower.getId());
-        if (checkFollow.isPresent()) {
+        User followingUser = findUser(followingUserId);
+
+        if (isAlreadyFollowing(followingUserId, follower.getId())) {
             throw new CustomException(ALREADY_FOLLOW);
         }
 
-        User followingUser = findUser(followingUserId);
         Follow follow = new Follow(followingUser, follower);
         followRepository.save(follow);
     }
@@ -59,10 +55,14 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
-    // 사용자 조회 메서드 (
+    // 사용자 조회 메서드
     private User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USERNAME_NOT_FOUND));
     }
-}
 
+    // 이미 팔로우 중인지 확인
+    private boolean isAlreadyFollowing(Long followingUserId, Long followerId) {
+        return followRepository.findByFollowingIdAndFollowerId(followingUserId, followerId).isPresent();
+    }
+}

@@ -13,7 +13,7 @@ public class SignUpRequestDto {
     @NotBlank(message = " username 비워둘 수 없습니다.")
     @Size(min = 4, max = 10, message = "username 는 최소 4글자 이상, 최대 10글자 이하여야 합니다.")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "username은 대소문자 포함 영문과 숫자만 허용됩니다.")
-    private String username = "username";
+    private String username;
 
     // 비밀번호
     @NotBlank(message = " password는 비워둘 수 없습니다.")

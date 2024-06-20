@@ -1,12 +1,13 @@
 package sparta.code3line.domain.follow.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import sparta.code3line.domain.follow.entity.Follow;
 
-@Getter
-@Setter
+
+@Data
 public class FollowResponseDto {
 
     @JsonProperty("following_user_id")

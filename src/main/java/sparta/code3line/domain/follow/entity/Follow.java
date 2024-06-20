@@ -25,7 +25,7 @@ public class Follow extends Timestamp {
     private User following;
 
     @ManyToOne
-    @JoinColumn(name = "follwer_user_id")
+    @JoinColumn(name = "follower_user_id")
     private User follower;
 
     @Builder
