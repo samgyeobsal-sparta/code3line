@@ -18,6 +18,13 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final User user;
 
+    private Map<String, Object> attributes;
+
+    public UserPrincipal(User user, Map<String, Object> attributes){
+        this.user = user;
+        this.attributes = attributes;
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of();
