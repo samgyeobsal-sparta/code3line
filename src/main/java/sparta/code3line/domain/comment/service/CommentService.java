@@ -84,8 +84,12 @@ public class CommentService {
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        if (!comment.getBoard().getId().equals(boardId) || !comment.getUser().equals(user)) {
-            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
+        if (!comment.getBoard().getId().equals(boardId)) {
+            throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
+        }
+
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
         }
 
         return comment;
