@@ -6,14 +6,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import sparta.code3line.jwt.JwtService;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtService jwtService;
@@ -39,8 +42,16 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request ->
                 request.anyRequest().permitAll());
 
+
         http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
+
+        http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                .loginPage("/templates/login.html")
+                .defaultSuccessUrl("/success")
+        );
+
 
         return http.build();
     }
+
 }

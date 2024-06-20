@@ -24,7 +24,10 @@ repositories {
 }
 
 dependencies {
-//이메일
+    // Oauth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    //이메일
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //modelmapper
@@ -47,7 +50,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    runtimeOnly 'com.h2database:h2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -18,8 +18,12 @@ public class SignUpRequestDto {
     // 비밀번호
     @NotBlank(message = " password는 비워둘 수 없습니다.")
     @Size(min = 8, max = 15, message = "password 는 최소 8글자 이상, 최대 15글자 이하여야 합니다.")
+   
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()_+]).{8,15}$"
             , message = "password는 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자를 포함해야 합니다.")
+
+    
+
     private String password;
 
     private String nickname;
