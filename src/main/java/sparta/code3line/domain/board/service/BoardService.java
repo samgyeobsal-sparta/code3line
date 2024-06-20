@@ -59,7 +59,7 @@ public class BoardService {
         Board addBoard = boardRepository.save(board);
 
         BoardResponseDto responseDto = new BoardResponseDto(
-                addBoard.getBoardId(),
+                addBoard.getId(),
                 addBoard.getTitle(),
                 addBoard.getContent(),
                 addBoard.getCreatedAt()
