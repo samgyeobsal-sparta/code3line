@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    //follow
+
+    ALREADY_FOLLOW(HttpStatus.BAD_REQUEST,"이미 팔로우했습니다."),
+    NOT_FOLLOWED(HttpStatus.BAD_REQUEST,"팔로우 하지 않았습니다."),
     // basic
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "BAD REQUEST"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN"),
