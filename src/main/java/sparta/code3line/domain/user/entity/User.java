@@ -21,10 +21,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String nickname;
 
     @Column
@@ -47,6 +47,8 @@ public class User {
         this.role = role;
         this.status = status;
     }
+
+
     public enum Role {
         NORMAL,
         ADMIN;
