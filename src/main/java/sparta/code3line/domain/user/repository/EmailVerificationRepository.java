@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sparta.code3line.domain.user.entity.User;
 
 @Repository
-public interface SignUpRepository extends JpaRepository<User, Long> {
+public interface EmailVerificationRepository extends JpaRepository<User, Long> {
 }
