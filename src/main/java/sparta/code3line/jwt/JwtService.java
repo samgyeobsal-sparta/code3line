@@ -6,12 +6,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
+import sparta.code3line.domain.user.entity.User;
+import sparta.code3line.domain.user.repository.UserRepository;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -22,6 +25,8 @@ import java.util.function.Function;
 @Slf4j(topic = "JwtService")
 @Component
 public class JwtService {
+
+    private UserRepository userRepository;
 
     // 환경변수에서 JWT 시크릿키 가져오기~
     @Value("${jwt.key}")
@@ -165,5 +170,26 @@ public class JwtService {
         }
         log.error("헤더에서 토큰 추출 실패");
         throw new CustomException(ErrorCode.TOKEN_INVALID);
+    }
+
+    // 헤더에 담긴 토큰에서 유저정보 빼오는 메서드.
+    public User getUserFromRequest(HttpServletRequest servletRequest) {
+        log.info("getUserFromRequest 메서드 실행.");
+        // 헤더에서 토큰 빼오기
+        String token = servletRequest.getHeader(JwtService.AUTHORIZATION_HEADER);
+        if (token == null) {
+            log.error("토큰 없음");
+            throw new CustomException(ErrorCode.TOKEN_INVALID);
+        }
+
+        // 토큰에서 Bearer 제거하고 남은 토큰값만 token 에 저장.
+        token = getToken(token);
+
+        // 빼온 토큰에서 username 빼오기
+        String username = extractUsername(token);
+
+        // userRepository 에서 username 으로 해당 유저 찾기.
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
     }
 }
