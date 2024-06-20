@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -50,12 +49,12 @@ public class JwtService {
 
         if (isValidToken(refreshToken)) {
             log.error("리프레쉬 토큰 유효하지 않음.");
-            throw new CustomException(ErrorCode.TOKEN_INVALID);
+            return null;
         }
 
         if (!isTokenExpired(refreshToken)) {
             log.error("리프레쉬 토큰 만료되었음.");
-            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+            return null;
         }
 
         String username = extractUsername(refreshToken);
@@ -101,17 +100,19 @@ public class JwtService {
     public boolean isValidToken(String token) {
         log.info("isValidToken 메서드 실행");
         if (!StringUtils.hasText(token)) {
-            log.error("토큰 유효성 검사 실패 : 토큰 없음");
-            throw new CustomException(ErrorCode.NOT_FOUND_TOKEN);
+            log.info("토큰 없음 : 회원가입이나 로그인 기능은 무시해도 좋음.");
+            return false;
         }
         try {
+            // 토큰에서 bearer 제거
+            token = getToken(token);
             // 토큰에서 사용자 이름 추출
             String username = extractUsername(token);
             // 토큰이 만료되지 않았다면 유효한 토큰임
             return (username != null && !isTokenExpired(token));
         } catch (Exception e) {
             log.error("토큰 유효성 검사 실패 : TokenExpired");
-            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+            return false;
         }
     }
 
@@ -156,12 +157,11 @@ public class JwtService {
     }
 
     // 헤더에서 Jwt 가져오기.
-    public String getJwtFromHeader(HttpServletRequest servletRequest) {
-        log.info("getJwtFromHeader 메서드 실행");
-        String bearerToken = servletRequest.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+    public String getToken(String token) {
+        log.info("getToken 메서드 실행");
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
             log.info("헤더에서 토큰 추출 성공");
-            return bearerToken.substring(7);
+            return token.substring(7);
         }
         log.error("헤더에서 토큰 추출 실패");
         throw new CustomException(ErrorCode.TOKEN_INVALID);
