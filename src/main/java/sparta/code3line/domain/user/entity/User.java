@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import sparta.code3line.domain.follow.entity.Follow;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -36,6 +39,12 @@ public class User {
     @Column(nullable = false)
     private Status status;
 
+    @OneToMany(mappedBy = "following")
+    private List<Follow> followerList;
+
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followingList;
+
     @Builder
     public User(String username, String password, String email, String nickname, String socialId, Role role, Status status)
     {
@@ -60,4 +69,6 @@ public class User {
         DELETED,
         BLOCK;
     }
+
+
 }
