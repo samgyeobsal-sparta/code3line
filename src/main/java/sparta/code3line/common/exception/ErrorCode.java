@@ -19,8 +19,9 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR"),
     // 필요시 직접 추가 (위 참고 해서)
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+    NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰 없음."),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰 만료됨."),
-    TOKEN_VALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음");
+    TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음");
 
 
     private final HttpStatus status;
