@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sparta.code3line.jwt.JwtService;
 
@@ -31,16 +34,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void validateToken(String token) {
         if(jwtService.isValidToken(token)) {
             Claims claims = jwtService.getClaims(token);
-            setAuthentication(claims.getSubject());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContext context =  SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+            SecurityContextHolder.setContext(context);
         }
     }
-
-    private void setAuthentication(String username) {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(username, null,
-                        userDetailsService.loadUserByUsername(username).getAuthorities())
-        );
-    }
-
-
 }
