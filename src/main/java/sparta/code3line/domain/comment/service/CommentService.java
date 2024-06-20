@@ -53,7 +53,7 @@ public class CommentService {
 
         if(comments != null) {
             for (Comment comment : comments) {
-                responseDtos.add(mapper.map(comment, CommentResponseDto.class));
+                responseDtos.add(new CommentResponseDto(comment));
             }
         }
 
@@ -66,7 +66,7 @@ public class CommentService {
         Comment comment = getComment(boardId, commentId, user);
 
         comment.updateContent(requestDto.getContents());
-        return mapper.map(comment, CommentResponseDto.class);
+        return new CommentResponseDto(comment);
     }
 
     @Transactional
