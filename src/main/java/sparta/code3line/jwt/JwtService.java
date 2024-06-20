@@ -104,9 +104,10 @@ public class JwtService {
     public boolean isValidToken(String token) {
         log.info("isValidToken 메서드 실행");
         // 여기와 밑에 extractAllClaims 메서드에 주석이 제거 되어야만 정상적으로 Bearer 를 제거하고 토큰 추출이 가능
-//        token = getToken(token);
+       String okToken = getToken(token);
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(okToken);
+            log.error("???여기옴???");
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
