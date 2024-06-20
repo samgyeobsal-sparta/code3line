@@ -41,4 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetailsService.loadUserByUsername(username).getAuthorities())
         );
     }
+
+
 }
