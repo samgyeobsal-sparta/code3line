@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.follow.entity.Follow;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @Entity
 @RequiredArgsConstructor
-public class User {
+public class User extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

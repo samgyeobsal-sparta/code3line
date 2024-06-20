@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import sparta.code3line.common.Timestamp;
 
 import static sparta.code3line.domain.user.entity.Token.Tokentype.REFRESH;
 import static sparta.code3line.domain.user.entity.Token.Tokentype.VERIFICATION;
@@ -11,7 +12,7 @@ import static sparta.code3line.domain.user.entity.Token.Tokentype.VERIFICATION;
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Token {
+public class Token extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
