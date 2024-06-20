@@ -44,6 +44,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     public String getName() {
         return user.getNickname();
     }
+
     // 계정이 만료 되었는지 (true: 만료X)
     @Override
     public boolean isAccountNonExpired() {
