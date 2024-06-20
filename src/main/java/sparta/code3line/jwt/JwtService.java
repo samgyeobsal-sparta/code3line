@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import sparta.code3line.common.exception.CustomException;
+import sparta.code3line.common.exception.ErrorCode;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -42,9 +44,28 @@ public class JwtService {
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+    // 엑세스 토큰 만료시 토큰 재발급
+    public String regenerateAccessToken(String refreshToken) {
+        log.info("regenerateAccessToken 메서드 실행");
+
+        if (isValidToken(refreshToken)) {
+            log.error("리프레쉬 토큰 유효하지 않음.");
+            throw new CustomException(ErrorCode.TOKEN_VALID);
+        }
+
+        if (!isTokenExpired(refreshToken)) {
+            log.error("리프레쉬 토큰 만료되었음.");
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        String username = extractUsername(refreshToken);
+        return generateAccessToken(username);
+    }
+
+    // 토큰 디코딩
     @PostConstruct
     public void init() {
-        log.info("토큰 디코딩 메서드 실행");
+        log.info("토큰 디코딩 실행");
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -89,8 +110,8 @@ public class JwtService {
             // 토큰이 만료되지 않았다면 유효한 토큰임
             return (username != null && !isTokenExpired(token));
         } catch (Exception e) {
-            log.error("토큰 유효성 검사 실패 : "+e.getMessage());
-            return false;
+            log.error("토큰 유효성 검사 실패 : TokenExpired");
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 
@@ -145,5 +166,4 @@ public class JwtService {
         log.error("헤더에서 토큰 추출 실패");
         return null;
     }
-
 }
