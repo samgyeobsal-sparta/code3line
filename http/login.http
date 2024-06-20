@@ -16,3 +16,17 @@ Content-Type: application/json
 PATCH http://localhost:8080/auth/logout
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "name2",
+  "password": "pass1234!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}

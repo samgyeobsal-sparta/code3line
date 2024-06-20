@@ -35,7 +35,11 @@ public enum ErrorCode {
     // Token
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰 없음."),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰 만료됨."),
-    TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음");
+    TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음"),
+    // 좋아요
+    LIKE_ME(HttpStatus.BAD_REQUEST, "자기 자신이 작성한 글에 좋아요 할 수 없습니다."),
+    ALREADY_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 하였습니다."),
+    NOT_LIKE(HttpStatus.BAD_REQUEST, "좋아요 하지 않았습니다.");
 
 
     private final HttpStatus status;
