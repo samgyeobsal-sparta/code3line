@@ -19,12 +19,12 @@ public class SignUpController {
     private final SignUpService signUpService;
     private final UserService userService;
 
-    @PostMapping("/user/sign")
+    @PostMapping("/user/signup")
     public String addUser(@Valid @RequestBody SignUpRequestDto requestDto) {
         return signUpService.addUser(requestDto);
     }
 
-    @PostMapping("/user/delete")
+    @PostMapping("/user/logout")
     public String deleteUser(@RequestBody SignUpRequestDto requestDto) {
 
         return signUpService.deleteUser(requestDto);

@@ -2,6 +2,7 @@ package sparta.code3line.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,13 @@ public class AuthController {
 
         CommonResponse<LoginResponseDto> response = new CommonResponse<LoginResponseDto>("로그인 성공", 200, responseDto);
 
-        return ResponseEntity.ok().headers(headers).body(response);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @PatchMapping("/logout")
     public ResponseEntity<CommonResponse<Void>> logout(@AuthenticationPrincipal UserPrincipal principal) {
-        CommonResponse<Void> response = new CommonResponse<Void>("로그아웃 성공", 204, authService.logout(principal));
-        return ResponseEntity.ok().body(response);
+        CommonResponse<Void> response = new CommonResponse<Void>("로그아웃 성공", 204, authService.logout(principal.getUser()));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
 }

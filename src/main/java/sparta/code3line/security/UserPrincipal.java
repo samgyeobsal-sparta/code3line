@@ -18,6 +18,13 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final User user;
 
+    private Map<String, Object> attributes;
+
+    public UserPrincipal(User user, Map<String, Object> attributes){
+        this.user = user;
+        this.attributes = attributes;
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of();
@@ -44,6 +51,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     public String getName() {
         return user.getNickname();
     }
+
     // 계정이 만료 되었는지 (true: 만료X)
     @Override
     public boolean isAccountNonExpired() {

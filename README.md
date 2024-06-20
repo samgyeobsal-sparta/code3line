@@ -83,3 +83,11 @@ api
 | 🎨 readme | readme 수정 |
 | 🙈 gitfix | gitignore 수정 |
 | 🔨script | package.json 변경(npm 설치 등) |
+
+## 코드 컨벤션
+### DTO
+> - `@Data` 어노테이션 사용
+
+### Controller
+> - `return ResponseEntity<>.status(HttpStatus.{HttpStatusCode}).body()` 형태로 반환하기
+> - `UserPrincipal` 변수를 `User`로 전환해서 `Service` 계층에 전달

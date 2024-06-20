@@ -1,5 +1,8 @@
 package sparta.code3line.domain.user.dto;
 
+import lombok.Data;
+
+@Data
 public class LoginUpRequestDto {
 
     //아이디
