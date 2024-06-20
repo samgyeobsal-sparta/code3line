@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j(topic = "JwtService")
 @Component
 public class JwtService {
 
@@ -36,7 +37,6 @@ public class JwtService {
 
     private SecretKey secretKey;
 
-
     public static final String BEARER_PREFIX = "Bearer ";
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -45,13 +45,16 @@ public class JwtService {
 
     // 엑세스 토큰 만료시 토큰 재발급
     public String regenerateAccessToken(String refreshToken) {
+        log.info("regenerateAccessToken 메서드 실행");
 
         if (isValidToken(refreshToken)) {
-            throw new CustomException(ErrorCode.TOKEN_VALID);
+            log.error("리프레쉬 토큰 유효하지 않음.");
+            return null;
         }
 
         if (!isTokenExpired(refreshToken)) {
-            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+            log.error("리프레쉬 토큰 만료되었음.");
+            return null;
         }
 
         String username = extractUsername(refreshToken);
@@ -61,24 +64,28 @@ public class JwtService {
     // 토큰 디코딩
     @PostConstruct
     public void init() {
+        log.info("토큰 디코딩 실행");
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 엑세스 토큰
     public String generateAccessToken(String username) {
+        log.info("generateAccessToken 메서드 실행");
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username, accessExpireTime);
     }
 
     // 리프레쉬 토큰
     public String generateRefreshToken(String username) {
+        log.info("generateRefreshToken 메서드 실행");
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username, refreshExpireTime);
     }
 
     // 토큰 생성
     private String createToken(Map<String, Object> claims, String subject, long expirationTime) {
+        log.info("createToken 메서드 실행");
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setClaims(claims)
@@ -91,47 +98,52 @@ public class JwtService {
 
     // 토큰 유효성 검사.
     public boolean isValidToken(String token) {
+        log.info("isValidToken 메서드 실행");
         if (!StringUtils.hasText(token)) {
+            log.info("토큰 없음 : 회원가입이나 로그인 기능은 무시해도 좋음.");
             return false;
         }
         try {
+            // 토큰에서 bearer 제거
+            token = getToken(token);
             // 토큰에서 사용자 이름 추출
             String username = extractUsername(token);
             // 토큰이 만료되지 않았다면 유효한 토큰임
             return (username != null && !isTokenExpired(token));
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+            log.error("토큰 유효성 검사 실패 : TokenExpired");
+            return false;
         }
-
     }
 
     // 토큰 만료 확인
     public Boolean isTokenExpired(String token) {
+        log.info("isTokenExpired 메서드 실행");
         return extractExpiration(token).before(new Date());
     }
 
     // 토큰 만료시간 추출
     public Date extractExpiration(String token) {
+        log.info("extractExpiration 메서드 실행");
         return extractClaim(token, Claims::getExpiration);
     }
 
     // 토큰에서 사용자 주체를 추출하는 메서드
     public String extractUsername(String token) {
+        log.info("extractUsername 메서드 실행");
         return extractClaim(token, Claims::getSubject);
     }
 
     // 토큰에서 특정 클레임을 추출하는 메서드
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        log.info("extractClaim 메서드 실행");
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     // 토큰에서 모든 클레임 추출
     private Claims extractAllClaims(String token) {
-        if (token == null || token.trim().isEmpty()) {  // <-- 추가된 부분
-            throw new IllegalArgumentException("JWT String argument cannot be null or empty.");
-        }
-
+        log.info("extractAllClaims 메서드 실행");
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
@@ -140,17 +152,18 @@ public class JwtService {
     }
 
     public Claims getClaims(String token) {
+        log.info("getClaims 메서드 실행");
         return extractAllClaims(token);
     }
 
     // 헤더에서 Jwt 가져오기.
-    public String getJwtFromHeader(HttpServletRequest servletRequest) {
-        String bearerToken = servletRequest.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+    public String getToken(String token) {
+        log.info("getToken 메서드 실행");
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+            log.info("헤더에서 토큰 추출 성공");
+            return token.substring(7);
         }
-        return null;
+        log.error("헤더에서 토큰 추출 실패");
+        throw new CustomException(ErrorCode.TOKEN_INVALID);
     }
-
-
 }
