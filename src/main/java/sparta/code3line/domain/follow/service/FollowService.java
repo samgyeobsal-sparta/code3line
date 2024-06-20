@@ -23,6 +23,10 @@ public class FollowService {
 
     // 팔로우 기능
     public void followUser(Long followingUserId, User follower) {
+        if(followingUserId == null)
+        {
+            throw new CustomException(USERNAME_NOT_FOUND);
+        }
         if (followingUserId.equals(follower.getId())) {
             throw new CustomException(USERNAME_NOT_FOUND);
         }
@@ -39,6 +43,10 @@ public class FollowService {
 
     // 언팔로우 기능
     public void unfollowUser(Long followingUserId, User follower) {
+        if(followingUserId == null)
+        {
+            throw new CustomException(NOT_FOLLOWED);
+        }
         Follow follow = followRepository.findByFollowingIdAndFollowerId(followingUserId, follower.getId())
                 .orElseThrow(() -> new CustomException(NOT_FOLLOWED));
 
