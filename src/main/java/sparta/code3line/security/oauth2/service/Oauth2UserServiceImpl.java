@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import sparta.code3line.config.PasswordEncorderConfig;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
-import sparta.code3line.security.oauth2.PrincipalDetails;
+import sparta.code3line.security.UserPrincipal;
 import sparta.code3line.security.oauth2.userinfo.GoogleOAuth2UserInfo;
 import sparta.code3line.security.oauth2.userinfo.KakaoOAuth2UserInfo;
 import sparta.code3line.security.oauth2.userinfo.NaverOAuth2UserInfo;
@@ -63,6 +63,6 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
             user = optionalUser.get();
         }
 
-        return new PrincipalDetails(user, oAuth2User.getAttributes());
+        return new UserPrincipal(user, oAuth2User.getAttributes());
     }
 }

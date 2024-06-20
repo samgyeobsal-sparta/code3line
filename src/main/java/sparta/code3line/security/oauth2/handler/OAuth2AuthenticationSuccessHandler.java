@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
-import sparta.code3line.security.oauth2.PrincipalDetails;
+import sparta.code3line.security.UserPrincipal;
+
 import java.io.IOException;
 
 @Component
@@ -23,7 +24,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        UserPrincipal principalDetails = (UserPrincipal) authentication.getPrincipal();
         User user = principalDetails.getUser();
 
         String targetUrl = UriComponentsBuilder.fromUriString("/success")
