@@ -17,7 +17,7 @@ public class Follow extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follow_id")
+    @Column(name = "follow_id", nullable = false)
     private Long id;
 
     @ManyToOne

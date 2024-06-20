@@ -13,6 +13,8 @@ import sparta.code3line.domain.follow.service.FollowService;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.security.UserPrincipal;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +27,10 @@ public class FollowController {
     public ResponseEntity<CommonResponse<FollowResponseDto>> createFollow(
             @RequestBody FollowRequestDto followRequestDto,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
         User currentUser = userPrincipal.getUser();
         followService.followUser(followRequestDto.getFollowingUserId(), currentUser);
-        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId());
+        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId(), LocalDateTime.now(),LocalDateTime.now());
         CommonResponse<FollowResponseDto> response = new CommonResponse<>("팔로우 성공 🎉", HttpStatus.OK.value(), followResponseDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -39,7 +42,7 @@ public class FollowController {
 
         User currentUser = userPrincipal.getUser();
         followService.unfollowUser(followRequestDto.getFollowingUserId(), currentUser);
-        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId());
+        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId(), LocalDateTime.now(), LocalDateTime.now());
         CommonResponse<FollowResponseDto> response = new CommonResponse<>("언팔로우 성공 🎉", HttpStatus.OK.value(), followResponseDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
