@@ -23,7 +23,6 @@ import java.util.Optional;
 @Slf4j
 public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
 
-
     private final UserRepository userRepository;
     private final PasswordEncorderConfig encoder;
 
