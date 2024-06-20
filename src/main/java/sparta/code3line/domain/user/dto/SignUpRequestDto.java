@@ -3,10 +3,10 @@ package sparta.code3line.domain.user.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
+import lombok.Data;
 
 
-@Getter
+@Data
 public class SignUpRequestDto {
 
     private Long id;
@@ -19,7 +19,7 @@ public class SignUpRequestDto {
 
     // 비밀번호
     @NotBlank(message = " password는 비워둘 수 없습니다.")
-    @Size(min = 8, max = 15, message = "username 는 최소 8글자 이상, 최대 15글자 이하여야 합니다.")
+    @Size(min = 8, max = 15, message = "password 는 최소 8글자 이상, 최대 15글자 이하여야 합니다.")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[~!@#$%^&*()_+])[A-Za-z\\d~!@#$%^&*()_+]{10,}$"
             , message = "password는 대소문자 포함 영문, 숫자, 특수문자를 최소 1글자씩 포함해야 합니다.")
     private String password;
