@@ -50,7 +50,7 @@ public class JwtService {
 
         if (isValidToken(refreshToken)) {
             log.error("리프레쉬 토큰 유효하지 않음.");
-            throw new CustomException(ErrorCode.TOKEN_VALID);
+            throw new CustomException(ErrorCode.TOKEN_INVALID);
         }
 
         if (!isTokenExpired(refreshToken)) {
@@ -102,7 +102,7 @@ public class JwtService {
         log.info("isValidToken 메서드 실행");
         if (!StringUtils.hasText(token)) {
             log.error("토큰 유효성 검사 실패 : 토큰 없음");
-            return false;
+            throw new CustomException(ErrorCode.NOT_FOUND_TOKEN);
         }
         try {
             // 토큰에서 사용자 이름 추출
@@ -164,6 +164,6 @@ public class JwtService {
             return bearerToken.substring(7);
         }
         log.error("헤더에서 토큰 추출 실패");
-        return null;
+        throw new CustomException(ErrorCode.TOKEN_INVALID);
     }
 }
