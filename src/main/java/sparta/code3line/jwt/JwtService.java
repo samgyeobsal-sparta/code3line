@@ -8,15 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import sparta.code3line.common.exception.CustomException;
-import sparta.code3line.common.exception.ErrorCode;
-import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j(topic = "JwtService")
@@ -47,22 +42,22 @@ public class JwtService {
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     // 엑세스 토큰 만료시 토큰 재발급
-//    public String regenerateAccessToken(String refreshToken) {
-//        log.info("regenerateAccessToken 메서드 실행");
-//
-//        if (isValidToken(refreshToken)) {
-//            log.error("리프레쉬 토큰 유효하지 않음.");
-//            return null;
-//        }
-//
+    public String regenerateAccessToken(String refreshToken) {
+        log.info("regenerateAccessToken 메서드 실행");
+
+        if (isValidToken(refreshToken)) {
+            log.error("리프레쉬 토큰 유효하지 않음.");
+            return null;
+        }
+
 //        if (!isTokenExpired(refreshToken)) {
 //            log.error("리프레쉬 토큰 만료되었음.");
 //            return null;
 //        }
-//
-//        String username = extractUsername(refreshToken);
-//        return generateAccessToken(username);
-//    }
+
+        String username = extractUsername(refreshToken);
+        return generateAccessToken(username);
+    }
 
     // 토큰 디코딩
     @PostConstruct
@@ -103,11 +98,8 @@ public class JwtService {
     // 토큰 검증
     public boolean isValidToken(String token) {
         log.info("isValidToken 메서드 실행");
-        // 여기와 밑에 extractAllClaims 메서드에 주석이 제거 되어야만 정상적으로 Bearer 를 제거하고 토큰 추출이 가능
-       String okToken = getToken(token);
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(okToken);
-            log.error("???여기옴???");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -140,10 +132,10 @@ public class JwtService {
 
     // 토큰 만료 확인
     // TODO : 없어도 됨
-    public Boolean isTokenExpired(String token) {
-        log.info("isTokenExpired 메서드 실행");
-        return extractExpiration(token).before(new Date());
-    }
+//    public Boolean isTokenExpired(String token) {
+//        log.info("isTokenExpired 메서드 실행");
+//        return extractExpiration(token).before(new Date());
+//    }
 
     // 토큰 만료시간 추출
     public Date extractExpiration(String token) {
