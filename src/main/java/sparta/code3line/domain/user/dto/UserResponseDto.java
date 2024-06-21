@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class UserResponseDto {
 
-    private final String username;
-    private final String password;
-    private final String nickname;
-    private final String newpassoword;
+    private String username;
+    private String nickname;
+    private String email;
+
 }
