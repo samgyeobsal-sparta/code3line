@@ -17,7 +17,7 @@ PATCH http://localhost:8080/auth/logout
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
-### 로그인
+### 로그인2
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
@@ -30,3 +30,20 @@ Content-Type: application/json
     client.global.set("access_token", response.body.result.accessToken);
     client.global.set("refresh_token", response.body.result.refreshToken);
 %}
+
+### 이메일 전송
+POST http://localhost:8080/users/email
+Content-Type: application/json
+
+{
+  "email": "helloworld@gmail.com"
+}
+
+### 이메일 검증
+PUT http://localhost:8080/users/email/verification
+Content-Type: application/json
+
+{
+  "email": "helloworld@gmail.com",
+  "code":"13TZDT5Y"
+}
