@@ -1,7 +1,0 @@
-### 인증메일전송
-POST http://localhost:8080/users/email
-Content-Type: application/json
-
-{
-  "email": "helloworld@gmail.com"
-}
