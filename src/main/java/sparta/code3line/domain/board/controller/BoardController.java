@@ -10,8 +10,6 @@ import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.service.BoardService;
-import sparta.code3line.domain.comment.controller.CommentController;
-import sparta.code3line.domain.user.repository.UserRepository;
 import sparta.code3line.security.UserPrincipal;
 
 import java.util.List;
@@ -20,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
-    private final CommentController commentController;
-    private final UserRepository userRepository;
 
     // 게시글 추가.
     @PostMapping("/boards")
