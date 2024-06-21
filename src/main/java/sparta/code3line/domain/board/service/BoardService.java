@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
@@ -97,7 +98,10 @@ public class BoardService {
     public Page<BoardResponseDto> getAllBoards(int page, int size) {
         log.info("getAllBoards 메서드 실행");
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         Page<Board> boardPage = boardRepository.findAll(pageable);
 
         log.info("getAllBoards 메서드 성공");
