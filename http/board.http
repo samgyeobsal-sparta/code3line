@@ -1,0 +1,9 @@
+### 게시글 생성
+POST http://localhost:8080/boards
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+"title": "title",
+"content": "content"
+}

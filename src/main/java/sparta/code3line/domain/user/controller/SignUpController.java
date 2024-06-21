@@ -1,32 +1,40 @@
 package sparta.code3line.domain.user.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import sparta.code3line.domain.user.dto.LoginUpRequestDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.user.dto.SignUpRequestDto;
+import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.service.SignUpService;
-import sparta.code3line.domain.user.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class SignUpController {
 
     private final SignUpService signUpService;
-    private final UserService userService;
 
-    @PostMapping("/user/signup")
-    public String addUser(@Valid @RequestBody SignUpRequestDto requestDto) {
-        return signUpService.addUser(requestDto);
+    @PostMapping("/signup")
+    public ResponseEntity<CommonResponse<User>> createUser(@Valid @RequestBody SignUpRequestDto requestDto) {
+        CommonResponse<User> response = new CommonResponse<>(
+                "회원가입 성공 🎉",
+                201,
+                signUpService.createUser(requestDto));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
-    @PostMapping("/user/logout")
-    public String deleteUser(@RequestBody SignUpRequestDto requestDto) {
+    @PutMapping("/signout")
+    public ResponseEntity<CommonResponse<Void>> deleteUser(@RequestBody SignUpRequestDto requestDto) {
+        CommonResponse<Void> response = new CommonResponse<>(
+                "회원탈퇴 성공 (┬┬﹏┬┬)",
+                204,
+                signUpService.deleteUser(requestDto));
 
-        return signUpService.deleteUser(requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 }

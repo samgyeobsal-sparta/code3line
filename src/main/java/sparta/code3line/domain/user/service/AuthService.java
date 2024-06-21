@@ -39,6 +39,10 @@ public class AuthService {
 
         User user = ((UserPrincipal)authentication.getPrincipal()).getUser();
 
+        if(!user.getStatus().equals(User.Status.ACTIVE)) {
+            throw new CustomException(ErrorCode.NOT_VERIFIED);
+        }
+
         String accessJwt = jwtService.generateAccessToken(user.getUsername());
         String refreshJwt = jwtService.generateRefreshToken(user.getUsername());
 

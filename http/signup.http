@@ -1,9 +1,20 @@
 ### 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "username",
+  "password" : "passWord1234!",
+  "email": "helloworld@gmail.com",
+  "nickname": "nickname"
+}
+
+### 회원가입2
 POST http://localhost:8080/user/signup
 Content-Type: application/json
 
 {
-  "email": "helloworld@gmail.com",
-  "username": "name",
+  "email": "helloworld2@gmail.com",
+  "username": "name2",
   "password": "pass1234!"
 }

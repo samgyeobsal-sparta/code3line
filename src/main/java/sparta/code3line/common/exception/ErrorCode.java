@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-    //follow
 
-    ALREADY_FOLLOW(HttpStatus.BAD_REQUEST,"이미 팔로우했습니다."),
-    NOT_FOLLOWED(HttpStatus.BAD_REQUEST,"팔로우 하지 않았습니다."),
+
     // basic
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "BAD REQUEST"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN"),
@@ -24,10 +22,24 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
 
+    // User
+    ALREADY_EXISTING_USER(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다."),
+    PASSWORD_NOT_MATCH(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
+    NOT_VERIFIED(HttpStatus.FORBIDDEN, "검증이 되지 않은 사용자입니다."),
+    ALREADY_DELETED(HttpStatus.FORBIDDEN, "이미 탈퇴된 사용자입니다."),
+
+    // follow
+    ALREADY_FOLLOW(HttpStatus.BAD_REQUEST,"이미 팔로우했습니다."),
+    NOT_FOLLOWED(HttpStatus.BAD_REQUEST,"팔로우 하지 않았습니다."),
+
     // Token
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰 없음."),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰 만료됨."),
-    TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음");
+    TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰 유효하지 않음"),
+    // 좋아요
+    LIKE_ME(HttpStatus.BAD_REQUEST, "자기 자신이 작성한 글에 좋아요 할 수 없습니다."),
+    ALREADY_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 하였습니다."),
+    NOT_LIKE(HttpStatus.BAD_REQUEST, "좋아요 하지 않았습니다.");
 
 
     private final HttpStatus status;
