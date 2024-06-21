@@ -35,7 +35,8 @@ public class MailService {
     private final UserRepository userRepository;
 
     public Void sendMail(MailRequestDto requestDto) {
-        Mail mail = checkAndSaveMail(requestDto.getEmail());
+        Mail mail = checkMail(requestDto.getEmail());
+        mailRepository.save(mail);
         MimeMessage mailForm = createMailForm(mail);
         javaMailSender.send(mailForm);
         return null;
@@ -105,15 +106,26 @@ public class MailService {
                 .toString();
     }
 
-    private Mail checkAndSaveMail(String email) {
+    private Mail checkMail(String email) {
         User user = getUserByEmail(email);
-        Optional<Mail> checkMail = mailRepository.findByEmail(user.getEmail());
-        checkMail.ifPresent(mailRepository::delete);
-        Mail mail = Mail.builder()
-                .user(user)
-                .build();
+        Mail mail;
+        if (isExist(email)) {
+            mail = getMail(email);
+        } else {
+            mail = Mail.builder()
+                    .user(user)
+                    .build();
+        }
 
-        return mailRepository.save(mail);
+        return mail;
+    }
+
+    private boolean isExist(String email) {
+        return mailRepository.findByEmail(email).isPresent();
+    }
+
+    private Mail getMail(String email) {
+        return mailRepository.findByEmail(email).get();
     }
 
     private User getUserByEmail(String email) {
