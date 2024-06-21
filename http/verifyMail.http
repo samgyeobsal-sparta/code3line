@@ -1,8 +1,0 @@
-### 메일인증
-PUT http://localhost:8080/users/email/verification
-Content-Type: application/json
-
-{
-  "email": "helloworld@gmail.com",
-  "code": "TwhQaYS7"
-}
