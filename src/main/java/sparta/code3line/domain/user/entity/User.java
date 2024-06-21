@@ -58,6 +58,10 @@ public class User extends Timestamp {
         this.status = status;
     }
 
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
+
 
     public enum Role {
         NORMAL,
