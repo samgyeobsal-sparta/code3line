@@ -18,3 +18,13 @@ Content-Type: application/json
   "username": "name2",
   "password": "pass1234!"
 }
+
+### 회원가입3
+POST http://localhost:8080/user/signup
+Content-Type: application/json
+
+{
+  "email": "helloworld3@gmail.com",
+  "username": "name3",
+  "password": "pass1234!"
+}
