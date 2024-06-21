@@ -2,6 +2,11 @@ package sparta.code3line.security.oauth2.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 import sparta.code3line.config.PasswordEncorderConfig;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
+import sparta.code3line.security.UserDetailsServiceImpl;
 import sparta.code3line.security.UserPrincipal;
 import sparta.code3line.security.oauth2.userinfo.GoogleOAuth2UserInfo;
 import sparta.code3line.security.oauth2.userinfo.KakaoOAuth2UserInfo;
@@ -23,6 +29,7 @@ import java.util.Optional;
 @Slf4j
 public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
 
+    private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final PasswordEncorderConfig encoder;
 
@@ -44,7 +51,7 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
         }
 
-        String socialId = oAuth2User.getAttribute("sub");
+        String socialId = userInfo.getProviderId(oAuth2User.getAttributes());
         Optional<User> optionalUser = userRepository.findBySocialId(socialId);
         User user;
 
@@ -63,6 +70,13 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
             user = optionalUser.get();
         }
 
-        return new UserPrincipal(user, oAuth2User.getAttributes());
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
+        SecurityContext context =  SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        return userPrincipal;
     }
 }
