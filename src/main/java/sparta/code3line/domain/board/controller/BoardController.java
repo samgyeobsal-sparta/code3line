@@ -2,6 +2,7 @@ package sparta.code3line.domain.board.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
-import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.board.service.BoardService;
 import sparta.code3line.security.UserPrincipal;
 
@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
-    private final BoardRepository boardRepository;
 
     // 게시글 추가.
     @PostMapping("/boards")
@@ -38,11 +37,13 @@ public class BoardController {
 
     // 게시글 전체 조회
     @GetMapping("/boards")
-    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getAllBoards(
+    public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllBoards(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size
     ) {
-        List<BoardResponseDto> responseDto = boardService.getAllBoards();
-        CommonResponse<List<BoardResponseDto>> commonResponse = new CommonResponse<>(
-                "게시글 조회 완료",
+        Page<BoardResponseDto> responseDto = boardService.getAllBoards(page, size);
+        CommonResponse<Page<BoardResponseDto>> commonResponse = new CommonResponse<>(
+                "게시글 " + page + "번 페이지 조회 완료",
                 200,
                 responseDto
         );

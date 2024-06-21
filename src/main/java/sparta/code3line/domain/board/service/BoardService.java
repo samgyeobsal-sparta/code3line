@@ -1,8 +1,10 @@
 package sparta.code3line.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
@@ -16,7 +18,6 @@ import sparta.code3line.domain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j(topic = "BoardService")
 @Service
@@ -93,14 +94,14 @@ public class BoardService {
     }
 
     // 게시글 전체 조회
-    public List<BoardResponseDto> getAllBoards() {
+    public Page<BoardResponseDto> getAllBoards(int page, int size) {
         log.info("getAllBoards 메서드 실행");
-        List<Board> boards = boardRepository.findAll();
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Board> boardPage = boardRepository.findAll(pageable);
 
         log.info("getAllBoards 메서드 성공");
-        return boards.stream()
-                .map(BoardResponseDto::new)
-                .collect(Collectors.toList());
+        return boardPage.map(BoardResponseDto::new);
     }
 
     // 게시글 단건 조회
