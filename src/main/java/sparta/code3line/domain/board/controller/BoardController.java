@@ -97,8 +97,11 @@ public class BoardController {
 
     // 팔로우하는 사용자의 게시물 조회
     @GetMapping("/boards/follows")
-    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getfollowBoard(@AuthenticationPrincipal UserPrincipal userPrincipal)
+    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getFollowBoard(@AuthenticationPrincipal UserPrincipal userPrincipal)
     {
+        if (userPrincipal == null || userPrincipal.getUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<BoardResponseDto> followBoardList = boardService.getFollowBoard(userPrincipal.getUser());
         CommonResponse<List<BoardResponseDto>> response = new CommonResponse<>("게시글 조회 성공 🎉", HttpStatus.OK.value(), followBoardList);
         return ResponseEntity.status(HttpStatus.OK).body(response);

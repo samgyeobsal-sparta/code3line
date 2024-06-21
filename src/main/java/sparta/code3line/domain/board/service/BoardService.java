@@ -61,6 +61,7 @@ public class BoardService {
         Board addBoard = boardRepository.save(board);
 
         BoardResponseDto responseDto = new BoardResponseDto(
+                addBoard.getUser().getNickname(),
                 addBoard.getId(),
                 addBoard.getTitle(),
                 addBoard.getContent(),
@@ -74,19 +75,27 @@ public class BoardService {
 
     // 팔로우 조회
     public List<BoardResponseDto> getFollowBoard(User user) {
+        if (user == null) {
+            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
+        }
+
         List<Follow> followingList = followRepository.findAllByFollowerId(user.getId());
+        if (followingList.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_FOLLOW_POST);
+        }
+
         List<Long> followingUserIds = new ArrayList<>();
         for (Follow follow : followingList) {
             followingUserIds.add(follow.getFollowing().getId());
         }
 
         List<Board> boards = boardRepository.findAllByUserIdInOrderByCreatedAtDesc(followingUserIds);
-        List<BoardResponseDto> BoardResponseDto = new ArrayList<>();
+        List<BoardResponseDto> boardResponseDto = new ArrayList<>();
         for (Board board : boards) {
-            BoardResponseDto.add(new BoardResponseDto(board));
+            boardResponseDto.add(new BoardResponseDto(board));
         }
 
-        return BoardResponseDto;
+        return boardResponseDto;
     }
 
     // 게시글 전체 조회
@@ -141,3 +150,4 @@ public class BoardService {
 
 
 }
+
