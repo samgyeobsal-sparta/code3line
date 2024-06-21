@@ -37,27 +37,22 @@ public class JwtService {
     public static final String BEARER_PREFIX = "Bearer ";
 
     // 권한 부여를 위한 AUTHORIZATION_KEY 설정
-//    public static final String AUTHORIZATION_KEY = "role";
+    public static final String AUTHORIZATION_KEY = "role";
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     // 엑세스 토큰 만료시 토큰 재발급
-    public String regenerateAccessToken(String refreshToken) {
-        log.info("regenerateAccessToken 메서드 실행");
-
-        if (isValidToken(refreshToken)) {
-            log.error("리프레쉬 토큰 유효하지 않음.");
-            return null;
-        }
-
-//        if (!isTokenExpired(refreshToken)) {
-//            log.error("리프레쉬 토큰 만료되었음.");
+//    public String regenerateAccessToken(String refreshToken) {
+//        log.info("regenerateAccessToken 메서드 실행");
+//
+//        if (isValidToken(refreshToken)) {
+//            log.error("리프레쉬 토큰 유효하지 않음.");
 //            return null;
 //        }
-
-        String username = extractUsername(refreshToken);
-        return generateAccessToken(username);
-    }
+//
+//        String username = extractUsername(refreshToken);
+//        return generateAccessToken(username);
+//    }
 
     // 토큰 디코딩
     @PostConstruct
@@ -152,14 +147,13 @@ public class JwtService {
     // 토큰에서 특정 클레임을 추출하는 메서드
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         log.info("extractClaim 메서드 실행");
-        final Claims claims = extractAllClaims(token);
+        final Claims claims = getClaims(token);
         return claimsResolver.apply(claims);
     }
 
     // 토큰에서 모든 클레임 추출
-    private Claims extractAllClaims(String token) {
+    public Claims getClaims(String token) {
         log.info("extractAllClaims 메서드 실행");
-//        token = getToken(token);
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -167,10 +161,10 @@ public class JwtService {
                 .getBody();
     }
 
-    public Claims getClaims(String token) {
-        log.info("getClaims 메서드 실행");
-        return extractAllClaims(token);
-    }
+//    public Claims getClaims(String token) {
+//        log.info("getClaims 메서드 실행");
+//        return extractAllClaims(token);
+//    }
 
     // 토큰 가져오기
     public String getToken(String token) {
