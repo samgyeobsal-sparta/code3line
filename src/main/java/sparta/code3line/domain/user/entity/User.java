@@ -62,10 +62,13 @@ public class User extends Timestamp {
         this.status = status;
     }
 
-
+    @Getter
+    @RequiredArgsConstructor
     public enum Role {
-        NORMAL,
-        ADMIN;
+        NORMAL("NORMAL"),
+        ADMIN("ADMIN");
+
+        private final String roleName;
     }
 
     public enum Status {
