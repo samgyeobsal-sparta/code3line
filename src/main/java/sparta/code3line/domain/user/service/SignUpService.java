@@ -23,6 +23,7 @@ public class SignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public User createUser(SignUpRequestDto signUpRequestDto) {
         User.Role role = User.Role.NORMAL;
 

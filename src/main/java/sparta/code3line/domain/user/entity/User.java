@@ -19,13 +19,13 @@ public class User extends Timestamp {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
+    @Column(unique = true, nullable = true)
     private String email;
 
     @Column(nullable = true)
