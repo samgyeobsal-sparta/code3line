@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
+import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.board.service.BoardService;
 import sparta.code3line.security.UserPrincipal;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final BoardRepository boardRepository;
 
     // 게시글 추가.
     @PostMapping("/boards")
@@ -91,6 +93,18 @@ public class BoardController {
                 null
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
+
+    // 팔로우하는 사용자의 게시물 조회
+    @GetMapping("/boards/follows")
+    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getFollowBoard(@AuthenticationPrincipal UserPrincipal userPrincipal)
+    {
+        if (userPrincipal == null || userPrincipal.getUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<BoardResponseDto> followBoardList = boardService.getFollowBoard(userPrincipal.getUser());
+        CommonResponse<List<BoardResponseDto>> response = new CommonResponse<>("게시글 조회 성공 🎉", HttpStatus.OK.value(), followBoardList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
 

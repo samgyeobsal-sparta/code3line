@@ -31,6 +31,9 @@ public enum ErrorCode {
     // follow
     ALREADY_FOLLOW(HttpStatus.BAD_REQUEST,"이미 팔로우했습니다."),
     NOT_FOLLOWED(HttpStatus.BAD_REQUEST,"팔로우 하지 않았습니다."),
+    NOT_FOLLOW_POST(HttpStatus.BAD_REQUEST,"팔로우 대상자가 게시글을 작성하지 않았습니다."),
+    NOT_FOLLOWED_ID(HttpStatus.BAD_REQUEST,"팔로우 하려는 ID를 찾을 수 없습니다."),
+    NOT_FOLLOW(HttpStatus.BAD_REQUEST,"본인은 팔로우 할 수 없습니다."),
 
     // Token
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰 없음."),

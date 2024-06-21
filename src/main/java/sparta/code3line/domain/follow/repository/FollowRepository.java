@@ -5,10 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import sparta.code3line.domain.follow.entity.Follow;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Optional<Follow> findByFollowingIdAndFollowerId(Long followingId, Long id);
+
+    List<Follow> findAllByFollowerId(Long followingId);
 }

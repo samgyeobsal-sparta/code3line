@@ -9,8 +9,16 @@ import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.entity.Board;
 import sparta.code3line.domain.board.repository.BoardRepository;
+import sparta.code3line.domain.follow.entity.Follow;
+import sparta.code3line.domain.follow.repository.FollowRepository;
 import sparta.code3line.domain.user.entity.User;
+import sparta.code3line.domain.user.repository.UserRepository;
+import sparta.code3line.jwt.JwtService;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +27,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
+    private final FollowRepository followRepository;
+    private final JwtService jwtService;
 
     // user 에 해당하는 게시물 찾아오기.
     public Board getBoard(User user, Long boardId) {
@@ -33,6 +44,7 @@ public class BoardService {
         log.info("getBoard 메서드 성공");
         return board;
     }
+
 
     // 게시글 추가 메서드.
     public BoardResponseDto addBoard(
@@ -49,6 +61,7 @@ public class BoardService {
         Board addBoard = boardRepository.save(board);
 
         BoardResponseDto responseDto = new BoardResponseDto(
+                addBoard.getUser().getNickname(),
                 addBoard.getId(),
                 addBoard.getTitle(),
                 addBoard.getContent(),
@@ -57,6 +70,32 @@ public class BoardService {
 
         log.info("addBoard 메서드 성공");
         return responseDto;
+    }
+
+
+    // 팔로우 조회
+    public List<BoardResponseDto> getFollowBoard(User user) {
+        if (user == null) {
+            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
+        }
+
+        List<Follow> followingList = followRepository.findAllByFollowerId(user.getId());
+        if (followingList.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_FOLLOW_POST);
+        }
+
+        List<Long> followingUserIds = new ArrayList<>();
+        for (Follow follow : followingList) {
+            followingUserIds.add(follow.getFollowing().getId());
+        }
+
+        List<Board> boards = boardRepository.findAllByUserIdInOrderByCreatedAtDesc(followingUserIds);
+        List<BoardResponseDto> boardResponseDto = new ArrayList<>();
+        for (Board board : boards) {
+            boardResponseDto.add(new BoardResponseDto(board));
+        }
+
+        return boardResponseDto;
     }
 
     // 게시글 전체 조회
@@ -111,3 +150,4 @@ public class BoardService {
 
 
 }
+
