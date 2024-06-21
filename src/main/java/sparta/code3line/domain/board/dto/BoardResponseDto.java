@@ -24,6 +24,7 @@ public class BoardResponseDto {
         this.createdAt = createdAt;
     }
 
+
     public BoardResponseDto(Board board) {
         this.boardId = board.getId();
         this.title = board.getTitle();
