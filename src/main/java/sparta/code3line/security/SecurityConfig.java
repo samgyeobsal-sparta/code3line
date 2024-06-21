@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import sparta.code3line.jwt.JwtService;
+import sparta.code3line.security.handler.AuthenticationEntryPointImpl;
 import sparta.code3line.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 
 @Configuration
@@ -23,6 +25,8 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -36,7 +40,12 @@ public class SecurityConfig {
 
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtService, new ObjectMapper());
+        return new OAuth2AuthenticationSuccessHandler(jwtService, objectMapper);
+    }
+
+    @Bean
+    AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthenticationEntryPointImpl(jwtService, objectMapper);
     }
 
     @Bean
@@ -45,6 +54,10 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.exceptionHandling(e -> e
+                .authenticationEntryPoint(authenticationEntryPoint())
+        );
 
         http.authorizeHttpRequests(request ->
                 request
