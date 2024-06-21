@@ -8,6 +8,7 @@ import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.entity.Board;
 import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.user.entity.User;
+import sparta.code3line.security.UserPrincipal;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,7 @@ public class BoardService {
         return responseDto;
     }
 
+    // 게시글 전체 조회
     public List<BoardResponseDto> getAllBoards(User user) {
         log.info("getAllBoards 메서드 실행");
         List<Board> boards = boardRepository.findAllByUserId(user.getId());
@@ -53,9 +55,25 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    // 게시글 단건 조회
     public BoardResponseDto getOneBoard(User user, Long boardId) {
         log.info("getOneBoard 메서드 실행");
         Board board = boardRepository.findByUserIdAndId(user.getId(),boardId);
+
+        return new BoardResponseDto(board);
+    }
+
+    // 게시글 수정
+    public BoardResponseDto updateBoard(
+            User user,
+            Long boardId,
+            BoardRequestDto requestDto) {
+
+        log.info("updateBoard 메서드 실행");
+        Board board = boardRepository.findByUserIdAndId(user.getId(),boardId);
+
+        board.updateBoard(requestDto.getTitle(),requestDto.getContent());
+        boardRepository.save(board);
 
         return new BoardResponseDto(board);
     }

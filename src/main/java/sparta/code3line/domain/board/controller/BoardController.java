@@ -11,6 +11,7 @@ import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.service.BoardService;
 import sparta.code3line.domain.comment.controller.CommentController;
+import sparta.code3line.domain.user.repository.UserRepository;
 import sparta.code3line.security.UserPrincipal;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     private final CommentController commentController;
+    private final UserRepository userRepository;
 
     // 게시글 추가.
     @PostMapping("/boards")
@@ -59,6 +61,22 @@ public class BoardController {
         BoardResponseDto responseDto = boardService.getOneBoard(userPrincipal.getUser(), boardId);
         CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
                 "게시글 단건 조회 완료.",
+                200,
+                responseDto
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    // 게시글 수정
+    @PatchMapping("/boards/{boardId}")
+    public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long boardId,
+            @RequestBody BoardRequestDto requestDto) {
+
+        BoardResponseDto responseDto = boardService.updateBoard(userPrincipal.getUser(), boardId, requestDto);
+        CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
+                "게시글 수정 완료",
                 200,
                 responseDto
         );

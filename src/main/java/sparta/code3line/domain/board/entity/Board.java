@@ -33,4 +33,9 @@ public class Board extends Timestamp {
         this.title = title;
         this.content = content;
     }
+
+    public void updateBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
