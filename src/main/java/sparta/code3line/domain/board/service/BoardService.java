@@ -48,6 +48,15 @@ public class BoardService {
         log.info("getAllBoards 메서드 실행");
         List<Board> boards = boardRepository.findAllByUserId(user.getId());
 
-        return boards.stream().map(BoardResponseDto::new).collect(Collectors.toList());
+        return boards.stream()
+                .map(BoardResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public BoardResponseDto getOneBoard(User user, Long boardId) {
+        log.info("getOneBoard 메서드 실행");
+        Board board = boardRepository.findByUserIdAndId(user.getId(),boardId);
+
+        return new BoardResponseDto(board);
     }
 }
