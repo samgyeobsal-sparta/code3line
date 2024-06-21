@@ -77,4 +77,11 @@ public class BoardService {
 
         return new BoardResponseDto(board);
     }
+
+    public void deleteBoard(User user, Long boardId) {
+
+        Board board = boardRepository.findByUserIdAndId(user.getId(),boardId);
+
+        boardRepository.delete(board);
+    }
 }
