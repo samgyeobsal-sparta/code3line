@@ -1,18 +1,19 @@
 package sparta.code3line.security.oauth2.controller;
 
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import sparta.code3line.common.CommonResponse;
+import sparta.code3line.domain.user.dto.LoginResponseDto;
+import sparta.code3line.security.UserPrincipal;
 
-@Controller
+@RestController
 public class SuccessController {
 
-    @GetMapping("/success")
-    public String success(@RequestParam String email, @RequestParam String nickname, @RequestParam String username, Model model) {
-        model.addAttribute("email", email);
-        model.addAttribute("nickname", nickname);
-        model.addAttribute("username", username);
-        return "redirect:/success.html";
-    }
+
 }

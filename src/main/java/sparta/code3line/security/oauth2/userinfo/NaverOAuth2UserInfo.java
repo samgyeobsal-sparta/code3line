@@ -5,8 +5,9 @@ import java.util.Map;
 public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
-    public boolean supports(String socialId) {
-        return "naver".equals(socialId);
+    public String getProviderId(Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        return (String) response.get("id");
     }
 
     @Override
