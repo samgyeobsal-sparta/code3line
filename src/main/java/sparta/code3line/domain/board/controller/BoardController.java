@@ -39,9 +39,8 @@ public class BoardController {
     // 게시글 전체 조회
     @GetMapping("/boards")
     public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getAllBoards(
-            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        List<BoardResponseDto> responseDto = boardService.getAllBoards(userPrincipal.getUser());
+        List<BoardResponseDto> responseDto = boardService.getAllBoards();
         CommonResponse<List<BoardResponseDto>> commonResponse = new CommonResponse<>(
                 "게시글 조회 완료",
                 200,
@@ -53,10 +52,9 @@ public class BoardController {
     // 게시글 단건 조회
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> getOneBoard(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId
     ) {
-        BoardResponseDto responseDto = boardService.getOneBoard(userPrincipal.getUser(), boardId);
+        BoardResponseDto responseDto = boardService.getOneBoard(boardId);
         CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
                 "게시글 단건 조회 완료.",
                 200,
