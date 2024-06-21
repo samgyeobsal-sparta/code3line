@@ -5,8 +5,8 @@ import java.util.Map;
 public class GoogleOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
-    public boolean supports(String socialId) {
-        return "google".equals(socialId);
+    public String getProviderId(Map<String, Object> attributes) {
+        return (String) attributes.get("sub");
     }
 
     @Override

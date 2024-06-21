@@ -5,8 +5,8 @@ import java.util.Map;
 public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
-    public boolean supports(String socialId) {
-        return "kakao".equals(socialId);
+    public String getProviderId(Map<String, Object> attributes) {
+        return attributes.get("id").toString();
     }
 
     @Override
