@@ -19,7 +19,7 @@ public class Token extends Timestamp {
     @Column(name = "token_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String token;
 
     @Column(nullable = false)

@@ -29,14 +29,14 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", responseDto.getAccessToken());
 
-        CommonResponse<LoginResponseDto> response = new CommonResponse<LoginResponseDto>("로그인 성공", 200, responseDto);
+        CommonResponse<LoginResponseDto> response = new CommonResponse<LoginResponseDto>("로그인 성공 🎉", 200, responseDto);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @PatchMapping("/logout")
     public ResponseEntity<CommonResponse<Void>> logout(@AuthenticationPrincipal UserPrincipal principal) {
-        CommonResponse<Void> response = new CommonResponse<Void>("로그아웃 성공", 204, authService.logout(principal.getUser()));
+        CommonResponse<Void> response = new CommonResponse<Void>("로그아웃 성공 🎉", 204, authService.logout(principal.getUser()));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 

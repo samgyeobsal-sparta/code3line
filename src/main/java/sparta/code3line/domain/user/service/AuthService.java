@@ -1,5 +1,6 @@
 package sparta.code3line.domain.user.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
+    @Transactional
     public LoginResponseDto login(LoginRequestDto requestDto) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -37,18 +39,23 @@ public class AuthService {
 
         User user = ((UserPrincipal)authentication.getPrincipal()).getUser();
 
-        /* jwtService.createToken */
         String accessJwt = jwtService.generateAccessToken(user.getUsername());
         String refreshJwt = jwtService.generateRefreshToken(user.getUsername());
 
-        tokenRepository.save(createToken(user, refreshJwt, "Refresh"));
+        if (hasToken(user)) {
+            Token token = getToken(user);
+            token.updateToken(refreshJwt);
+        } else {
+            tokenRepository.save(createToken(user, refreshJwt, "Refresh"));
+        }
 
         return new LoginResponseDto(accessJwt, refreshJwt);
     }
 
+    @Transactional
     public Void logout(User user) {
         Token token = getToken(user);
-        tokenRepository.delete(token);
+        token.updateToken(null);
         return null;
     }
 
@@ -60,9 +67,13 @@ public class AuthService {
                 .build();
     }
 
+    private boolean hasToken(User user) {
+        return tokenRepository.findByUserId(user.getId()).isPresent();
+    }
+
     private Token getToken(User user) {
         return tokenRepository.findByUserId(user.getId()).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND)
+                () -> new CustomException(ErrorCode.NOT_FOUND_TOKEN)
         );
     }
 }
