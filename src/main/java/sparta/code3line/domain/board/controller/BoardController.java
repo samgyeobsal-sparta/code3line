@@ -64,7 +64,7 @@ public class BoardController {
     }
 
     // 게시글 수정
-    @PatchMapping("/boards/{boardId}")
+    @PutMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId,
@@ -79,6 +79,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
+    // 게시글 삭제
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponse<Void>> deleteBoard(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -90,7 +91,7 @@ public class BoardController {
                 204,
                 null
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
     }
 
     // 팔로우하는 사용자의 게시물 조회
