@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.follow.entity.Follow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -46,9 +47,14 @@ public class User extends Timestamp {
     @OneToMany(mappedBy = "follower")
     private List<Follow> followingList;
 
+    @ElementCollection
+    @CollectionTable(name = "user_previous_passwords", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "password")
+    private List<String> previousPasswords = new ArrayList<>();
+
+
     @Builder
-    public User(String username, String password, String email, String nickname, String socialId, Role role, Status status)
-    {
+    public User(String username, String password, String email, String nickname, String socialId, Role role, Status status) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -60,6 +66,20 @@ public class User extends Timestamp {
 
     public void updateStatus(Status status) {
         this.status = status;
+    }
+    public void addPreviousPassword(String password) {
+        if (previousPasswords.size() >= 3) {
+            previousPasswords.remove(0);
+        }
+        previousPasswords.add(password);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Getter
@@ -77,6 +97,4 @@ public class User extends Timestamp {
         DELETED,
         BLOCK;
     }
-
-
 }
