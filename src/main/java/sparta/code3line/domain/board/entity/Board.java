@@ -1,16 +1,17 @@
 package sparta.code3line.domain.board.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.user.entity.User;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Board {
+public class Board extends Timestamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
@@ -26,16 +27,10 @@ public class Board {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime modifyAt;
-
+    @Builder
     public Board(User user, String title, String content) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDateTime.now();
     }
 }

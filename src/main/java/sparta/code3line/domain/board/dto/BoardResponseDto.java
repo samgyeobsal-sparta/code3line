@@ -1,12 +1,10 @@
 package sparta.code3line.domain.board.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 public class BoardResponseDto {
     private Long boardId;
     private String title;
