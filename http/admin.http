@@ -11,6 +11,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 
+
 ### 특정 회원 관리자로 변경
 PATCH http://localhost:8080/admin/users/4/verification
 Content-Type: application/json
