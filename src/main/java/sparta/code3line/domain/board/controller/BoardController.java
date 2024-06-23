@@ -1,6 +1,7 @@
 package sparta.code3line.domain.board.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
+import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
 import sparta.code3line.domain.board.service.BoardService;
 import sparta.code3line.security.UserPrincipal;
 
@@ -23,7 +25,7 @@ public class BoardController {
     // 게시글 추가.
     @PostMapping("/boards")
     public ResponseEntity<CommonResponse<BoardResponseDto>> addBoard(
-            @RequestBody BoardRequestDto requestDto,
+            @Valid @RequestBody BoardRequestDto requestDto,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         BoardResponseDto responseDto = boardService.addBoard(userPrincipal.getUser(), requestDto);
@@ -69,7 +71,7 @@ public class BoardController {
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId,
-            @RequestBody BoardRequestDto requestDto
+            @Valid @RequestBody BoardUpdateRequestDto requestDto
     ) {
         BoardResponseDto responseDto = boardService.updateBoard(userPrincipal.getUser(), boardId, requestDto);
         CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
@@ -86,7 +88,7 @@ public class BoardController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId
     ) {
-        boardService.deleteBoard(userPrincipal.getUser(),boardId);
+        boardService.deleteBoard(userPrincipal.getUser(), boardId);
         CommonResponse<Void> commonResponse = new CommonResponse<>(
                 "게시글 삭제 완료",
                 204,
@@ -97,8 +99,7 @@ public class BoardController {
 
     // 팔로우하는 사용자의 게시물 조회
     @GetMapping("/boards/follows")
-    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getFollowBoard(@AuthenticationPrincipal UserPrincipal userPrincipal)
-    {
+    public ResponseEntity<CommonResponse<List<BoardResponseDto>>> getFollowBoard(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (userPrincipal == null || userPrincipal.getUser() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -106,5 +107,6 @@ public class BoardController {
         CommonResponse<List<BoardResponseDto>> response = new CommonResponse<>("게시글 조회 성공 🎉", HttpStatus.OK.value(), followBoardList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }
 

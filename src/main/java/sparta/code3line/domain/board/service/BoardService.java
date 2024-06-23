@@ -11,6 +11,7 @@ import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
+import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
 import sparta.code3line.domain.board.entity.Board;
 import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.follow.entity.Follow;
@@ -51,7 +52,7 @@ public class BoardService {
         Board board = Board.builder()
                 .user(user)
                 .title(requestDto.getTitle())
-                .content(requestDto.getContent())
+                .contents(requestDto.getContent())
                 .build();
 
         Board addBoard = boardRepository.save(board);
@@ -60,7 +61,7 @@ public class BoardService {
                 addBoard.getUser().getNickname(),
                 addBoard.getId(),
                 addBoard.getTitle(),
-                addBoard.getContent(),
+                addBoard.getContents(),
                 addBoard.getCreatedAt()
         );
 
@@ -123,22 +124,36 @@ public class BoardService {
     public BoardResponseDto updateBoard(
             User user,
             Long boardId,
-            BoardRequestDto requestDto) {
+            BoardUpdateRequestDto requestDto) {
 
         log.info("updateBoard 메서드 실행");
-        Board board = getBoard(user,boardId);
+        Board board = getBoard(user, boardId);
 
-        board.updateBoard(requestDto.getTitle(), requestDto.getContent());
+        if (requestDto.getTitle() != null) {
+            if (requestDto.getTitle().trim().isEmpty()) {
+                throw new CustomException(ErrorCode.BAD_REQUEST);
+            }
+            board.updateTitle(requestDto.getTitle());
+        }
+
+        if (requestDto.getContent() != null) {
+            if (requestDto.getContent().trim().isEmpty()) {
+                throw new CustomException(ErrorCode.BAD_REQUEST);
+            }
+            board.updateContents(requestDto.getContent());
+        }
+
         boardRepository.save(board);
 
         log.info("updateBoard 메서드 성공");
         return new BoardResponseDto(board);
     }
 
+
     // 게시물 삭제
     public void deleteBoard(User user, Long boardId) {
         log.info("deleteBoard 메서드 실행");
-        Board board = getBoard(user,boardId);
+        Board board = getBoard(user, boardId);
 
         log.info("deleteBoard 메서드 성공");
         boardRepository.delete(board);
