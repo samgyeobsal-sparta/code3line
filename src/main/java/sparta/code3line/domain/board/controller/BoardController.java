@@ -37,15 +37,45 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
-    // 게시글 전체 조회
+    // 공지 + 일반 게시글 전체 조회
     @GetMapping("/boards")
     public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllBoards(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "3") int size
+            @RequestParam(defaultValue = "1") int page
     ) {
-        Page<BoardResponseDto> responseDto = boardService.getAllBoards(page, size);
+        int sizeFixed = 5;
+        Page<BoardResponseDto> responseDto = boardService.getAllBoards(page - 1, sizeFixed);
         CommonResponse<Page<BoardResponseDto>> commonResponse = new CommonResponse<>(
-                "게시글 " + page + "번 페이지 조회 완료",
+                "공지 + 일반 게시글 " + page + "번 페이지 조회 완료",
+                200,
+                responseDto
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    // 일반 게시글 전체 조회
+    @GetMapping("/boards/notice")
+    public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllNoticeBoards(
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        int sizeFixed = 5;
+        Page<BoardResponseDto> responseDto = boardService.getAllNoticeBoards(page - 1, sizeFixed);
+        CommonResponse<Page<BoardResponseDto>> commonResponse = new CommonResponse<>(
+                "공지 게시글 " + page + "번 페이지 조회 완료",
+                200,
+                responseDto
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    // 공지 게시글 전체 조회
+    @GetMapping("/boards/normal")
+    public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllNormalBoards(
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        int sizeFixed = 5;
+        Page<BoardResponseDto> responseDto = boardService.getAllNormalBoards(page - 1, sizeFixed);
+        CommonResponse<Page<BoardResponseDto>> commonResponse = new CommonResponse<>(
+                "일반 게시글 " + page + "번 페이지 조회 완료",
                 200,
                 responseDto
         );

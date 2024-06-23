@@ -94,8 +94,7 @@ public class BoardService {
 
         return boardResponseDto;
     }
-
-    // 게시글 전체 조회
+    // 일반 + 공지 게시글 전체 조회
     public Page<BoardResponseDto> getAllBoards(int page, int size) {
         log.info("getAllBoards 메서드 실행");
 
@@ -106,6 +105,34 @@ public class BoardService {
         Page<Board> boardPage = boardRepository.findAll(pageable);
 
         log.info("getAllBoards 메서드 성공");
+        return boardPage.map(BoardResponseDto::new);
+    }
+
+    // 공지 게시글 전체 조회
+    public Page<BoardResponseDto> getAllNoticeBoards(int page, int size) {
+        log.info("getAllNoticeBoards 메서드 실행");
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Board> boardPage = boardRepository.findAllByType(Board.BoardType.NOTICE, pageable);
+
+        log.info("getAllNoticeBoards 메서드 성공");
+        return boardPage.map(BoardResponseDto::new);
+    }
+
+    // 일반 게시글 전체 조회
+    public Page<BoardResponseDto> getAllNormalBoards(int page, int size) {
+        log.info("getAllNormalBoards 메서드 실행");
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Board> boardPage = boardRepository.findAllByType(Board.BoardType.NORMAL, pageable);
+
+        log.info("getAllNormalBoards 메서드 성공");
         return boardPage.map(BoardResponseDto::new);
     }
 
