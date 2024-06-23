@@ -18,6 +18,7 @@ import sparta.code3line.security.UserPrincipal;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordVerification passwordVeriFication;
 
     // admin - 특정 회원 삭제
     @PatchMapping("{userId}/delete")
@@ -52,10 +53,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
-
-
-    private final UserService userService;
-    private final PasswordVerification passwordVeriFication;
 
 //    // 유저 프로필 가져오기
 //    @GetMapping("/profiles")
