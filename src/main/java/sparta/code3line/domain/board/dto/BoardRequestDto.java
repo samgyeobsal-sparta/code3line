@@ -12,5 +12,5 @@ public class BoardRequestDto {
 
     @Size(max = 100, message = "내용은 최대 100자까지만 입력이 가능합니다.")
     @NotBlank(message = "내용은 비워둘 수 없습니다.")
-    private String content;
+    private String contents;
 }
