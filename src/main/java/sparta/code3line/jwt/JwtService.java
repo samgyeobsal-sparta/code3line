@@ -11,6 +11,8 @@ import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j(topic = "JwtService")
@@ -35,17 +37,39 @@ public class JwtService {
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    // 엑세스 토큰 만료시 토큰 재발급
-    public String regenerateAccessToken(String refreshToken) {
-        log.info("regenerateAccessToken 메서드 실행");
+    // 엑세스 토큰과 리프레쉬 토큰 둘다 재발급
+    // TODO : 과제의 조건이 엑세스 토큰 만료시 리프레쉬 토큰을 사용하여 엑세스, 리프레쉬 토큰 둘다 재발급이다.
+    public Map<String, String> regenerateTokens(String refreshToken) {
+        log.info("regenerateAllToken 메서드 실행");
 
-        if (isValidToken(refreshToken)) {
+        // 토큰 검증.
+        if (!isValidToken(refreshToken)) {
             log.error("리프레쉬 토큰 유효하지 않음.");
             return null;
         }
 
+        // 리프레쉬 토큰에서 유저이름 가져오기
         String username = extractUsername(refreshToken);
-        return generateAccessToken(username);
+        log.info("리프레쉬 토큰에서 username 추출 성공");
+
+        // 엑세스 토큰 재발급
+        String regenerateAccessToken = generateAccessToken(username);
+        log.info("엑세스 토큰 재발급");
+
+        // 리프레쉬 토큰 재발급
+        String regenerateRefreshToken = generateRefreshToken(username);
+        log.info("리프레쉬 토큰 재발급");
+
+        // 맵 형태의 tokens 객체 선언
+        Map<String, String> tokens = new HashMap<>();
+
+        // tokens 에 엑세스 토큰과 리프레쉬 토큰 넣기.
+        tokens.put("accessToken", regenerateAccessToken);
+        tokens.put("refreshToken", regenerateRefreshToken);
+
+        // 토큰들이 들어있는 Map 형태의 tokens 를 반환하여 사용 로직에서 분리해서 사용하기.
+        log.info("regenerateTokens 메서드 성공.");
+        return tokens;
     }
 
     // 토큰 디코딩
