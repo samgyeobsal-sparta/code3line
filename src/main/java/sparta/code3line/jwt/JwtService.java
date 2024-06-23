@@ -8,10 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import sparta.code3line.common.exception.CustomException;
+import sparta.code3line.common.exception.ErrorCode;
+import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j(topic = "JwtService")
@@ -37,7 +42,7 @@ public class JwtService {
     public static final String BEARER_PREFIX = "Bearer ";
 
     // 권한 부여를 위한 AUTHORIZATION_KEY 설정
-    public static final String AUTHORIZATION_KEY = "role";
+//    public static final String AUTHORIZATION_KEY = "role";
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -47,6 +52,11 @@ public class JwtService {
 //
 //        if (isValidToken(refreshToken)) {
 //            log.error("리프레쉬 토큰 유효하지 않음.");
+//            return null;
+//        }
+//
+//        if (!isTokenExpired(refreshToken)) {
+//            log.error("리프레쉬 토큰 만료되었음.");
 //            return null;
 //        }
 //
@@ -93,8 +103,11 @@ public class JwtService {
     // 토큰 검증
     public boolean isValidToken(String token) {
         log.info("isValidToken 메서드 실행");
+        // 여기와 밑에 extractAllClaims 메서드에 주석이 제거 되어야만 정상적으로 Bearer 를 제거하고 토큰 추출이 가능
+       String okToken = getToken(token);
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(okToken);
+            log.error("???여기옴???");
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -108,29 +121,12 @@ public class JwtService {
         return false;
     }
 
-    // 에러 메시지 가져오기
-    public String getErrorMessage(String token) {
-        String okToken = getToken(token);
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(okToken);
-            return "정상 JWT token 입니다.";
-        } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            return "Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.";
-        } catch (ExpiredJwtException e) {
-            return "Expired JWT token, 만료된 JWT token 입니다.";
-        } catch (UnsupportedJwtException e) {
-            return "Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.";
-        } catch (IllegalArgumentException e) {
-            return "JWT claims is empty, 잘못된 JWT 토큰 입니다.";
-        }
-    }
-
     // 토큰 만료 확인
     // TODO : 없어도 됨
-//    public Boolean isTokenExpired(String token) {
-//        log.info("isTokenExpired 메서드 실행");
-//        return extractExpiration(token).before(new Date());
-//    }
+    public Boolean isTokenExpired(String token) {
+        log.info("isTokenExpired 메서드 실행");
+        return extractExpiration(token).before(new Date());
+    }
 
     // 토큰 만료시간 추출
     public Date extractExpiration(String token) {
@@ -147,31 +143,32 @@ public class JwtService {
     // 토큰에서 특정 클레임을 추출하는 메서드
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         log.info("extractClaim 메서드 실행");
-        final Claims claims = getClaims(token);
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     // 토큰에서 모든 클레임 추출
-    public Claims getClaims(String token) {
+    private Claims extractAllClaims(String token) {
         log.info("extractAllClaims 메서드 실행");
+//        token = getToken(token);
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(getToken(token))
+                .parseClaimsJws(token)
                 .getBody();
     }
 
-//    public Claims getClaims(String token) {
-//        log.info("getClaims 메서드 실행");
-//        return extractAllClaims(token);
-//    }
+    public Claims getClaims(String token) {
+        log.info("getClaims 메서드 실행");
+        return extractAllClaims(token);
+    }
 
     // 토큰 가져오기
     public String getToken(String token) {
         log.info("getToken 메서드 실행");
         if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
             log.info("헤더에서 토큰 추출 성공");
-            return token.replace(BEARER_PREFIX, "");
+            return token.substring(BEARER_PREFIX.length()).trim();
         }
         log.error("헤더에서 토큰 추출 실패");
         return null;
