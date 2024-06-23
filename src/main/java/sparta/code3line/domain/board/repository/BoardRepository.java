@@ -1,5 +1,7 @@
 package sparta.code3line.domain.board.repository;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import sparta.code3line.domain.board.entity.Board;
@@ -14,9 +16,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findAllByUserIdInOrderByCreatedAtDesc(List<Long> followingUserId);
 
-    List<Board> findAllByUserId(Long userId);
+    Page<Board> findAll(Pageable pageable);
 
-    Board findByUserIdAndId(Long id, Long boardId);
+    Page<Board> findAllByType(Board.BoardType type, Pageable pageable);
 
-    Board findByUserId(Long userId);
 }
