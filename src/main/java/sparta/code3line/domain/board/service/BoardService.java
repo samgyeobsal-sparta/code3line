@@ -11,6 +11,7 @@ import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
+import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
 import sparta.code3line.domain.board.entity.Board;
 import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.follow.entity.Follow;
@@ -41,7 +42,6 @@ public class BoardService {
         return board;
     }
 
-
     // 게시글 추가 메서드.
     public BoardResponseDto addBoard(
             User user,
@@ -51,7 +51,8 @@ public class BoardService {
         Board board = Board.builder()
                 .user(user)
                 .title(requestDto.getTitle())
-                .content(requestDto.getContent())
+                .contents(requestDto.getContents())
+                .type(Board.BoardType.NORMAL) // addBoard 메서드를 사용해서 게시글을 생성하면 NORMAL 게시글로 고정
                 .build();
 
         Board addBoard = boardRepository.save(board);
@@ -60,14 +61,14 @@ public class BoardService {
                 addBoard.getUser().getNickname(),
                 addBoard.getId(),
                 addBoard.getTitle(),
-                addBoard.getContent(),
-                addBoard.getCreatedAt()
+                addBoard.getContents(),
+                addBoard.getCreatedAt(),
+                addBoard.getModifiedAt()
         );
 
         log.info("addBoard 메서드 성공");
         return responseDto;
     }
-
 
     // 팔로우 조회
     public List<BoardResponseDto> getFollowBoard(User user) {
@@ -93,8 +94,7 @@ public class BoardService {
 
         return boardResponseDto;
     }
-
-    // 게시글 전체 조회
+    // 일반 + 공지 게시글 전체 조회
     public Page<BoardResponseDto> getAllBoards(int page, int size) {
         log.info("getAllBoards 메서드 실행");
 
@@ -105,6 +105,34 @@ public class BoardService {
         Page<Board> boardPage = boardRepository.findAll(pageable);
 
         log.info("getAllBoards 메서드 성공");
+        return boardPage.map(BoardResponseDto::new);
+    }
+
+    // 공지 게시글 전체 조회
+    public Page<BoardResponseDto> getAllNoticeBoards(int page, int size) {
+        log.info("getAllNoticeBoards 메서드 실행");
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Board> boardPage = boardRepository.findAllByType(Board.BoardType.NOTICE, pageable);
+
+        log.info("getAllNoticeBoards 메서드 성공");
+        return boardPage.map(BoardResponseDto::new);
+    }
+
+    // 일반 게시글 전체 조회
+    public Page<BoardResponseDto> getAllNormalBoards(int page, int size) {
+        log.info("getAllNormalBoards 메서드 실행");
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Board> boardPage = boardRepository.findAllByType(Board.BoardType.NORMAL, pageable);
+
+        log.info("getAllNormalBoards 메서드 성공");
         return boardPage.map(BoardResponseDto::new);
     }
 
@@ -123,12 +151,27 @@ public class BoardService {
     public BoardResponseDto updateBoard(
             User user,
             Long boardId,
-            BoardRequestDto requestDto) {
+            BoardUpdateRequestDto requestDto) {
 
         log.info("updateBoard 메서드 실행");
-        Board board = getBoard(user,boardId);
+        Board board = getBoard(user, boardId);
 
-        board.updateBoard(requestDto.getTitle(), requestDto.getContent());
+        if (requestDto.getTitle() != null) {
+            if (requestDto.getTitle().trim().isEmpty()) {
+                log.info("게시물 제목이 형식에 맞지 않음");
+                throw new CustomException(ErrorCode.BAD_REQUEST);
+            }
+            board.updateTitle(requestDto.getTitle());
+        }
+
+        if (requestDto.getContent() != null) {
+            if (requestDto.getContent().trim().isEmpty()) {
+                log.info("게시물 내용이 형식에 맞지 않음");
+                throw new CustomException(ErrorCode.BAD_REQUEST);
+            }
+            board.updateContents(requestDto.getContent());
+        }
+
         boardRepository.save(board);
 
         log.info("updateBoard 메서드 성공");
@@ -138,7 +181,7 @@ public class BoardService {
     // 게시물 삭제
     public void deleteBoard(User user, Long boardId) {
         log.info("deleteBoard 메서드 실행");
-        Board board = getBoard(user,boardId);
+        Board board = getBoard(user, boardId);
 
         log.info("deleteBoard 메서드 성공");
         boardRepository.delete(board);
