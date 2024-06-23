@@ -10,21 +10,35 @@ Content-Type: application/json
 }
 
 ### 회원가입2
-POST http://localhost:8080/user/signup
+POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
+  "username" : "username1",
   "email": "helloworld2@gmail.com",
   "username": "name2",
   "password": "pass1234!"
 }
 
 ### 회원가입3
-POST http://localhost:8080/user/signup
+POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
   "email": "helloworld3@gmail.com",
   "username": "name3",
   "password": "pass1234!"
+}
+
+### 회원가입4
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "dlskdud123",
+  "password" : "dlskdud123@",
+  "email" : "dlskdud123@naver.com",
+  "nickname" : "두유",
+  "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
+
 }

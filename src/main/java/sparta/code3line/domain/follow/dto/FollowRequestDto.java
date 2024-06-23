@@ -11,8 +11,7 @@ import lombok.Setter;
 @Data
 public class FollowRequestDto {
 
-    //@NotBlank
-    @NotNull
+    @NotBlank
     @JsonProperty("following_user_id")
     private Long followingUserId;
 
