@@ -2,6 +2,10 @@ package sparta.code3line.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
@@ -12,24 +16,16 @@ import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.follow.entity.Follow;
 import sparta.code3line.domain.follow.repository.FollowRepository;
 import sparta.code3line.domain.user.entity.User;
-import sparta.code3line.domain.user.repository.UserRepository;
-import sparta.code3line.jwt.JwtService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j(topic = "BoardService")
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    private final JwtService jwtService;
 
     // user 에 해당하는 게시물 찾아오기.
     public Board getBoard(User user, Long boardId) {
@@ -99,25 +95,25 @@ public class BoardService {
     }
 
     // 게시글 전체 조회
-    public List<BoardResponseDto> getAllBoards(User user) {
+    public Page<BoardResponseDto> getAllBoards(int page, int size) {
         log.info("getAllBoards 메서드 실행");
-        List<Board> boards = boardRepository.findAllByUserId(user.getId());
 
-        if (boards.isEmpty()) {
-            log.error("해당 사용자의 게시글이 하나도 없음.");
-            throw new CustomException(ErrorCode.BOARD_NOT_FOUND);
-        }
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Board> boardPage = boardRepository.findAll(pageable);
 
         log.info("getAllBoards 메서드 성공");
-        return boards.stream()
-                .map(BoardResponseDto::new)
-                .collect(Collectors.toList());
+        return boardPage.map(BoardResponseDto::new);
     }
 
     // 게시글 단건 조회
-    public BoardResponseDto getOneBoard(User user, Long boardId) {
+    public BoardResponseDto getOneBoard(Long boardId) {
         log.info("getOneBoard 메서드 실행");
-        Board board = getBoard(user,boardId);
+
+        Board board = boardRepository.findById(boardId).orElseThrow(()
+                -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
         log.info("getOneBoard 메서드 성공");
         return new BoardResponseDto(board);
