@@ -38,6 +38,10 @@ public class BoardService {
             log.error("다른 사용자의 게시물 침범.");
             throw new CustomException(ErrorCode.USER_DIFFERENT);
         }
+        if (board.getType() != Board.BoardType.NORMAL) {
+            log.error("게시물에 대한 권한 없음");
+            throw new CustomException(ErrorCode.NOT_AUTHORIZED);
+        }
         log.info("getBoard 메서드 성공");
         return board;
     }
