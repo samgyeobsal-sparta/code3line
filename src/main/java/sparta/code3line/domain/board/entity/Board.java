@@ -25,17 +25,20 @@ public class Board extends Timestamp {
     private String title;
 
     @Column(nullable = false)
-    private String content;
+    private String contents;
 
     @Builder
-    public Board(User user, String title, String content) {
+    public Board(User user, String title, String contents) {
         this.user = user;
         this.title = title;
-        this.content = content;
+        this.contents = contents;
     }
 
-    public void updateBoard(String title, String content) {
+    public void updateTitle(String title) {
         this.title = title;
-        this.content = content;
+    }
+
+    public void updateContents(String contents) {
+        this.contents = contents;
     }
 }
