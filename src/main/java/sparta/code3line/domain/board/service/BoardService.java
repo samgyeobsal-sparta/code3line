@@ -42,7 +42,6 @@ public class BoardService {
         return board;
     }
 
-
     // 게시글 추가 메서드.
     public BoardResponseDto addBoard(
             User user,
@@ -68,7 +67,6 @@ public class BoardService {
         log.info("addBoard 메서드 성공");
         return responseDto;
     }
-
 
     // 팔로우 조회
     public List<BoardResponseDto> getFollowBoard(User user) {
@@ -131,6 +129,7 @@ public class BoardService {
 
         if (requestDto.getTitle() != null) {
             if (requestDto.getTitle().trim().isEmpty()) {
+                log.info("게시물 제목이 형식에 맞지 않음");
                 throw new CustomException(ErrorCode.BAD_REQUEST);
             }
             board.updateTitle(requestDto.getTitle());
@@ -138,6 +137,7 @@ public class BoardService {
 
         if (requestDto.getContent() != null) {
             if (requestDto.getContent().trim().isEmpty()) {
+                log.info("게시물 내용이 형식에 맞지 않음");
                 throw new CustomException(ErrorCode.BAD_REQUEST);
             }
             board.updateContents(requestDto.getContent());
@@ -148,7 +148,6 @@ public class BoardService {
         log.info("updateBoard 메서드 성공");
         return new BoardResponseDto(board);
     }
-
 
     // 게시물 삭제
     public void deleteBoard(User user, Long boardId) {
