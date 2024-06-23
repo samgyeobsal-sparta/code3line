@@ -52,6 +52,7 @@ public class BoardService {
                 .user(user)
                 .title(requestDto.getTitle())
                 .contents(requestDto.getContents())
+                .type(Board.BoardType.NORMAL) // addBoard 메서드를 사용해서 게시글을 생성하면 NORMAL 게시글로 고정
                 .build();
 
         Board addBoard = boardRepository.save(board);
@@ -61,7 +62,8 @@ public class BoardService {
                 addBoard.getId(),
                 addBoard.getTitle(),
                 addBoard.getContents(),
-                addBoard.getCreatedAt()
+                addBoard.getCreatedAt(),
+                addBoard.getModifiedAt()
         );
 
         log.info("addBoard 메서드 성공");

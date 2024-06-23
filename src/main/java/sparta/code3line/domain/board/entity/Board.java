@@ -27,11 +27,16 @@ public class Board extends Timestamp {
     @Column(nullable = false)
     private String contents;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BoardType type;
+
     @Builder
-    public Board(User user, String title, String contents) {
+    public Board(User user, String title, String contents, BoardType type) {
         this.user = user;
         this.title = title;
         this.contents = contents;
+        this.type = type;
     }
 
     public void updateTitle(String title) {
@@ -40,5 +45,12 @@ public class Board extends Timestamp {
 
     public void updateContents(String contents) {
         this.contents = contents;
+    }
+
+    public enum BoardType {
+        // 일반 게시물
+        NORMAL,
+        // 공지 게시물
+        NOTICE
     }
 }

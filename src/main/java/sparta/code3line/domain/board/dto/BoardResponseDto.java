@@ -19,12 +19,14 @@ public class BoardResponseDto {
             Long boardId,
             String title,
             String contents,
-            LocalDateTime createdAt) {
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt) {
         this.boardId = boardId;
         this.title = title;
         this.nickname = nickname;
         this.contents = contents;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
 
