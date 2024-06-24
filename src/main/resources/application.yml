@@ -80,3 +80,18 @@ spring:
             timeout: 5000
             writetimeout: 5000
 
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+
+    region:
+      static: ${AWS_REGION}
+      auto: false
+
+    stack:
+      auto: false
+
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
