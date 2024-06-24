@@ -45,6 +45,7 @@ public class FileService {
 
         // forEach 구문을 통해 multipartFiles 리스트로 넘어온 파일들을 순차적으로 fileNameList 에 추가
         multipartFiles.forEach(file -> {
+
             String originalFilename = file.getOriginalFilename();
             String fileName = createFileName(originalFilename);
             String extension = getFileExtension(originalFilename);
@@ -63,28 +64,37 @@ public class FileService {
             }
 
             fileUrlList.add(amazonS3.getUrl(bucket, fileName).toString());
+
         });
 
         return fileUrlList;
+
     }
 
     // 먼저 파일 업로드시, 파일명을 난수화하기 위해 UUID 를 활용하여 난수를 돌린다.
     private String createFileName(String fileName){
+
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
+
     }
 
     //
     private String getFileExtension(String fileName){
+
         try{
             validateImageFileExtension(fileName);
             return fileName.substring(fileName.lastIndexOf("."));
+
         } catch (StringIndexOutOfBoundsException e){
             throw new CustomException(ErrorCode.FILE_NAME_INVALID);
         }
+
     }
 
     private void validateImageFileExtension(String filename) {
+
         int lastDotIndex = filename.lastIndexOf(".");
+
         if (lastDotIndex == -1) {
             throw new CustomException(ErrorCode.EXTENSION_IS_EMPTY);
         }
@@ -95,9 +105,11 @@ public class FileService {
         if (!allowedExtentionList.contains(extension)) {
             throw new CustomException(ErrorCode.EXTENSION_INVALID);
         }
+
     }
 
     private void validateFileSize(long size, String extension) {
+
         if (isImageFile(extension) && size > MAX_IMAGE_SIZE) {
             throw new IllegalArgumentException("이미지 파일 크기는 10MB를 초과할 수 없습니다.");
         } else if (isVideoFile(extension) && size > MAX_VIDEO_SIZE) {
@@ -106,23 +118,29 @@ public class FileService {
     }
 
     private boolean isImageFile(String extension) {
+
         return extension.equals("jpeg") || extension.equals("jpg") || extension.equals("png");
+
     }
 
     private boolean isVideoFile(String extension) {
+
         return extension.equals("mp4") || extension.equals("avi") || extension.equals("gif");
+
     }
 
     public String deleteFile(String fileUrl){
+
         String key = getKeyFromFileAddress(fileUrl);
-        log.info(key);
+
         try{
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
             return null;
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             throw new CustomException(ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
+
     }
 
     private String getKeyFromFileAddress(String fileAddress){
@@ -130,7 +148,7 @@ public class FileService {
             URL url = new URL(fileAddress);
             String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
             return decodingKey.substring(1); // 맨 앞의 '/' 제거
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new CustomException(ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
         }

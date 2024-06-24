@@ -1,21 +1,19 @@
 package sparta.code3line.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.file.FileService;
-import sparta.code3line.domain.user.dto.UserRequestDto;
+import sparta.code3line.domain.user.dto.ProfileRequestDto;
 import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -23,7 +21,6 @@ import java.util.logging.Logger;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     private final FileService fileService;
@@ -86,18 +83,18 @@ public class UserService {
 
     // 프로필 변경
     @Transactional
-    public UserResponseDto updateProfiles(Long userId, UserRequestDto userRequestDto, List<MultipartFile> fileList) {
+    public UserResponseDto updateProfiles(Long userId, ProfileRequestDto profileRequestDto, List<MultipartFile> fileList) {
         User user = getUserById(userId);
 
-        if (userRequestDto.getNickname() != null && !userRequestDto.getNickname().isEmpty()) {
-            user.setNickname(userRequestDto.getNickname());
+        if (profileRequestDto.getNickname() != null && !profileRequestDto.getNickname().isEmpty()) {
+            user.setNickname(profileRequestDto.getNickname());
             userRepository.save(user);
             logger.info("닉네임 변경 완료");
         }
 
         if (fileList != null) {
 
-            if (!user.getProfileImg().isEmpty()) {
+            if (user.getProfileImg() != null) {
                 fileService.deleteFile(user.getProfileImg());
             }
 

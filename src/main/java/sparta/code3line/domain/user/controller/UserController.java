@@ -7,7 +7,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.CommonResponse;
-import sparta.code3line.domain.user.dto.UserRequestDto;
+import sparta.code3line.domain.user.dto.PasswordRequestDto;
+import sparta.code3line.domain.user.dto.ProfileRequestDto;
 import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.service.PasswordVerification;
@@ -98,8 +99,8 @@ public class UserController {
     public ResponseEntity<CommonResponse<UserResponseDto>> updateProfilesNickname(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long userId,
-            @RequestBody UserRequestDto userRequestDto,
-            @RequestPart List<MultipartFile> fileList)
+            @RequestPart(value = "profile") ProfileRequestDto ProfileRequestDto,
+            @RequestPart(value = "file", required = false) List<MultipartFile> fileList)
     {
 
         User currentUser = userPrincipal.getUser();
@@ -109,9 +110,9 @@ public class UserController {
         }
 
         CommonResponse<UserResponseDto> commonResponse = new CommonResponse<>(
-                "프로필 닉네임 변경 성공 🎉",
+                "프로필 변경 성공 🎉",
                 HttpStatus.OK.value(),
-                userService.updateProfiles(userId, userRequestDto, fileList));
+                userService.updateProfiles(userId, ProfileRequestDto, fileList));
 
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
 
@@ -119,10 +120,10 @@ public class UserController {
 
     // USER : 비밀번호 수정
     @PatchMapping("/profiles/{userId}/pw")
-    public ResponseEntity<CommonResponse<UserResponseDto>> updatePassword(
+    public ResponseEntity<CommonResponse<?>> updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long userId,
-            @RequestBody UserRequestDto userRequestDto) {
+            @RequestBody PasswordRequestDto passwordRequestDto) {
 
         User currentUser = userPrincipal.getUser();
 
@@ -131,7 +132,7 @@ public class UserController {
         }
 
         try {
-            passwordVeriFication.updatePassword(userId, userRequestDto);
+            passwordVeriFication.updatePassword(userId, passwordRequestDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponse<>(
                     e.getMessage(),
