@@ -10,6 +10,7 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
+
     @Value("${spring.mail.host}")
     public String host;
 
@@ -42,6 +43,7 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
@@ -51,9 +53,11 @@ public class MailConfig {
         mailSender.setJavaMailProperties(getMailProperties());
 
         return mailSender;
+
     }
 
     private Properties getMailProperties() {
+
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", auth);
         properties.put("mail.smtp.starttls.enable", starttlsEnable);
@@ -63,5 +67,7 @@ public class MailConfig {
         properties.put("mail.smtp.writetimeout", writeTimeout);
 
         return properties;
+
     }
+
 }

@@ -20,60 +20,78 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Map<String, Object> attributes;
 
-    public UserPrincipal(User user, Map<String, Object> attributes){
+    public UserPrincipal(User user, Map<String, Object> attributes) {
+
         this.user = user;
         this.attributes = attributes;
+
     }
 
     @Override
     public Map<String, Object> getAttributes() {
+
         return Map.of();
+
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       // return List.of(new SimpleGrantedAuthority(user.getRole().toString())
-        return List.of(new SimpleGrantedAuthority("ROLE_" +user.getRole().getRoleName())
+
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRoleName())
 
         );
     }
 
     @Override
     public String getPassword() {
+
         return user.getPassword();
+
     }
 
     @Override
     public String getUsername() {
+
         return user.getUsername();
+
     }
 
     @Override
     public String getName() {
+
         return user.getNickname();
+
     }
 
     // 계정이 만료 되었는지 (true: 만료X)
     @Override
     public boolean isAccountNonExpired() {
+
         return true;
+
     }
 
     // 계정이 잠겼는지 (true: 잠기지 않음)
     @Override
     public boolean isAccountNonLocked() {
+
         return true;
+
     }
 
     // 비밀번호가 만료되었는지 (true: 만료X)
     @Override
     public boolean isCredentialsNonExpired() {
+
         return true;
+
     }
 
     // 계정이 활성화(사용가능)인지 (true: 활성화)
     @Override
     public boolean isEnabled() {
+
         return true;
+
     }
 }

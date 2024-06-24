@@ -30,9 +30,14 @@ public class FollowController {
 
         User currentUser = userPrincipal.getUser();
         followService.followUser(followRequestDto.getFollowingUserId(), currentUser);
-        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId(), LocalDateTime.now(),LocalDateTime.now());
-        CommonResponse<FollowResponseDto> response = new CommonResponse<>("팔로우 성공 🎉", HttpStatus.OK.value(), followResponseDto);
+        FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId(), LocalDateTime.now(), LocalDateTime.now());
+        CommonResponse<FollowResponseDto> response = new CommonResponse<>(
+                "팔로우 성공 🎉",
+                HttpStatus.OK.value(),
+                followResponseDto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
     @DeleteMapping
@@ -43,7 +48,13 @@ public class FollowController {
         User currentUser = userPrincipal.getUser();
         followService.unfollowUser(followRequestDto.getFollowingUserId(), currentUser);
         FollowResponseDto followResponseDto = new FollowResponseDto(followRequestDto.getFollowingUserId(), currentUser.getId(), LocalDateTime.now(), LocalDateTime.now());
-        CommonResponse<FollowResponseDto> response = new CommonResponse<>("언팔로우 성공 🎉", HttpStatus.OK.value(), followResponseDto);
+        CommonResponse<FollowResponseDto> response = new CommonResponse<>(
+                "언팔로우 성공 🎉",
+                HttpStatus.OK.value(),
+                followResponseDto);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
+
 }

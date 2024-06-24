@@ -25,6 +25,7 @@ public class SignUpService {
 
     @Transactional
     public User createUser(SignUpRequestDto signUpRequestDto) {
+
         User.Role role = User.Role.NORMAL;
 
         // 존재 여부 확인
@@ -33,7 +34,7 @@ public class SignUpService {
         }
 
         // 관리자 권한 부여 여부 확인
-        if(isAdmin(signUpRequestDto.getAdmin())) {
+        if (isAdmin(signUpRequestDto.getAdmin())) {
             role = User.Role.ADMIN;
         }
 
@@ -47,6 +48,7 @@ public class SignUpService {
                 .build();
 
         return userRepository.save(user);
+
     }
 
     @Transactional
@@ -69,19 +71,24 @@ public class SignUpService {
         user.updateStatus(User.Status.DELETED);
 
         return null;
+
     }
 
     private boolean isExist(String username) {
+
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
+
     }
 
     private boolean isAdmin(String adminCode) {
+
         if (adminCode != null) {
             return adminCode.equals(ADMIN_CODE);
         } else {
             return false;
         }
+
     }
 
 }

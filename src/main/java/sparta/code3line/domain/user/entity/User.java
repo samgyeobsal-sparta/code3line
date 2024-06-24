@@ -62,28 +62,24 @@ public class User extends Timestamp {
     }
 
     public void updateStatus(Status status) {
-        if(this.status == Status.DELETED)
-        {
+        if (this.status == Status.DELETED) {
             throw new CustomException(ErrorCode.ALREADY_DELETED);
         }
-        if(this.status == Status.BLOCK)
-        {
+        if (this.status == Status.BLOCK) {
             throw new CustomException(ErrorCode.ALREADY_BLOCK);
         }
         this.status = status;
     }
 
 
-    public void updateRole(Role role)
-    {
-        if(this.role == Role.ADMIN)
-        {
+    public void updateRole(Role role) {
+        if (this.role == Role.ADMIN) {
             throw new CustomException(ErrorCode.ALREADY_ADMIN);
         }
         this.role = role;
     }
 
-    public boolean isUserToAdmin(){
+    public boolean isUserToAdmin() {
         return this.role == Role.ADMIN;
     }
 
@@ -91,8 +87,7 @@ public class User extends Timestamp {
         return this.status == Status.DELETED;
     }
 
-    public boolean isBlock()
-    {
+    public boolean isBlock() {
         return this.status == Status.BLOCK;
     }
 
@@ -110,7 +105,6 @@ public class User extends Timestamp {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
 
     @Getter
     @RequiredArgsConstructor

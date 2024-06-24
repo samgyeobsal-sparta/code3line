@@ -1,3 +1,4 @@
+
 ### 팔로우
 POST http://localhost:8080/follows
 Content-Type: application/json

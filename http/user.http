@@ -1,26 +1,26 @@
-### 프로필 조회
+
+### 프로필 조회(ADMIN : 프로필 전체 조회, USER : 본인 프로필 조회)
 GET http://localhost:8080/profiles
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
-
-### 프로필 닉네임 수정
-PATCH http://localhost:8080/profiles/7
+### 프로필 닉네임 수정(닉네임만 수정 가능)
+PATCH http://localhost:8080/profiles/1
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "username": "username6",
-  "nickname" : "수정"
+  "username": "username123",
+  "nickname" : "수정이"
 }
 
 ### 프로필 비밀번호 수정
-PATCH http://localhost:8080/profiles/7/pw
+PATCH http://localhost:8080/profiles/1/pw
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "username" : "username6",
-  "password" : "passWord1236!",
-  "newpassword" :"dlskdud127@"
+  "username" : "username123",
+  "password" : "passWord123!",
+  "newpassword" :"passWord124!"
 }

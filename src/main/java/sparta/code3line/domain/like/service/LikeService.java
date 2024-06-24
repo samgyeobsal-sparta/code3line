@@ -1,7 +1,6 @@
 package sparta.code3line.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
@@ -17,7 +16,6 @@ import sparta.code3line.domain.like.repository.LikeCommentRepository;
 import sparta.code3line.domain.user.entity.User;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,20 +23,20 @@ public class LikeService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final ModelMapper modelMapper;
     private final LikeBoardRepository likeBoardRepository;
     private final LikeCommentRepository likeCommentRepository;
 
     public LikeResponseDto createLikeBoard(Long id, User user) {
+
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
 
-        if(Objects.equals(board.getUser().getId(), user.getId())) {
+        if (Objects.equals(board.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.LIKE_ME);
         }
 
-        if(likeBoardRepository.findByUserIdAndBoardId(user.getId(), board.getId()).isPresent()) {
+        if (likeBoardRepository.findByUserIdAndBoardId(user.getId(), board.getId()).isPresent()) {
             throw new CustomException(ErrorCode.ALREADY_LIKE);
         }
 
@@ -48,10 +46,12 @@ public class LikeService {
                 .build();
 
         likeBoard = likeBoardRepository.save(likeBoard);
-        return modelMapper.map(likeBoard, LikeResponseDto.class);
+        return new LikeResponseDto(likeBoard);
+
     }
 
     public LikeResponseDto deleteLikeBoard(Long id, User user) {
+
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
@@ -61,19 +61,21 @@ public class LikeService {
         );
 
         likeBoardRepository.delete(likeBoard);
-        return modelMapper.map(likeBoard, LikeResponseDto.class);
+        return new LikeResponseDto(likeBoard);
+
     }
 
     public LikeResponseDto createLikeComment(Long id, User user) {
+
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
 
-        if(Objects.equals(comment.getUser().getId(), user.getId())) {
+        if (Objects.equals(comment.getUser().getId(), user.getId())) {
             throw new CustomException(ErrorCode.LIKE_ME);
         }
 
-        if(likeCommentRepository.findByUserIdAndCommentId(user.getId(), comment.getId()).isPresent()) {
+        if (likeCommentRepository.findByUserIdAndCommentId(user.getId(), comment.getId()).isPresent()) {
             throw new CustomException(ErrorCode.ALREADY_LIKE);
         }
 
@@ -83,10 +85,12 @@ public class LikeService {
                 .build();
 
         likeComment = likeCommentRepository.save(likeComment);
-        return modelMapper.map(likeComment, LikeResponseDto.class);
+        return new LikeResponseDto(likeComment);
+
     }
 
     public LikeResponseDto deleteLikeComment(Long id, User user) {
+
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
@@ -96,6 +100,7 @@ public class LikeService {
         );
 
         likeCommentRepository.delete(likeComment);
-        return modelMapper.map(likeComment, LikeResponseDto.class);
+        return new LikeResponseDto(likeComment);
+
     }
 }
