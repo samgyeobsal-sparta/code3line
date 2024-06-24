@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.user.dto.UserRequestDto;
+import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -92,5 +94,22 @@ public class UserService {
         }
 
         return "닉네임 수정 완료";
+    }
+
+    // 사용자 프로필 가져오기
+    public UserResponseDto getUserProfiles(UserRequestDto userRequestDto){
+        Optional<User> existingUserOptional = userRepository.findByUsername(userRequestDto.getUsername());
+        if (!existingUserOptional.isPresent()) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+
+        User user = existingUserOptional.get();
+
+        if (user.getRole() == User.Role.ADMIN) {
+            List<User> users = userRepository.findAll();
+            return new UserResponseDto(users);
+        } else {
+            return new UserResponseDto(user);
+        }
     }
 }

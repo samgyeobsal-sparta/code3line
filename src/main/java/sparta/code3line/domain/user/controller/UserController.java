@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.user.dto.UserRequestDto;
+import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.service.PasswordVerification;
 import sparta.code3line.domain.user.service.UserService;
@@ -14,14 +15,14 @@ import sparta.code3line.security.UserPrincipal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("admin/users")
+
 public class UserController {
 
     private final UserService userService;
     private final PasswordVerification passwordVeriFication;
 
     // admin - 특정 회원 삭제
-    @PatchMapping("{userId}/delete")
+    @PatchMapping("admin/users/{userId}/delete")
     public ResponseEntity<CommonResponse<Void>> deleteUser(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     // admin - 특정 회원 차단
-    @PatchMapping("{userId}/block")
+    @PatchMapping("admin/users/{userId}/block")
     public ResponseEntity<CommonResponse<Void>> blockUser(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -54,11 +55,11 @@ public class UserController {
 
     }
 
-//    // 유저 프로필 가져오기
-//    @GetMapping("/profiles")
-//    public UserResponseDto getUserProfiles(UserRequestDto userRequestDto) {
-//        return userService.getUserProfiles(userRequestDto);
-//    }
+    // 유저 프로필 가져오기
+    @GetMapping("/profiles")
+    public UserResponseDto getUserProfiles(UserRequestDto userRequestDto) {
+        return userService.getUserProfiles(userRequestDto);
+    }
 
     // 유저 프로필 닉네임 수정
     @PatchMapping("/profiles/{username}")
