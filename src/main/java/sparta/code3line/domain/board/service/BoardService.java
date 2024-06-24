@@ -164,21 +164,12 @@ public class BoardService {
         Board board = getBoard(user, boardId);
 
         if (requestDto.getTitle() != null) {
-            if (requestDto.getTitle().trim().isEmpty()) {
-                log.info("게시물 제목이 형식에 맞지 않음");
-                throw new CustomException(ErrorCode.BAD_REQUEST);
-            }
             board.updateTitle(requestDto.getTitle());
         }
 
         if (requestDto.getContent() != null) {
-            if (requestDto.getContent().trim().isEmpty()) {
-                log.info("게시물 내용이 형식에 맞지 않음");
-                throw new CustomException(ErrorCode.BAD_REQUEST);
-            }
             board.updateContents(requestDto.getContent());
         }
-
         boardRepository.save(board);
 
         log.info("updateBoard 메서드 성공");
