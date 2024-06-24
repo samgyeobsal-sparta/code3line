@@ -11,6 +11,7 @@ import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -78,38 +79,47 @@ public class UserService {
 
     // 닉네임 변경
     @Transactional
-    public String updateProfilesNickname(UserRequestDto userRequestDto) {
-        Optional<User> existingUserOptional = userRepository.findByUsername(userRequestDto.getUsername());
-        if (!existingUserOptional.isPresent()) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+    public UserResponseDto updateProfilesNickname(Long userId, UserRequestDto userRequestDto) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
         }
 
-        User user = existingUserOptional.get();
+        User user = userOptional.get();
 
-        // 닉네임 변경 여부 확인 및 처리
         if (userRequestDto.getNickname() != null && !userRequestDto.getNickname().isEmpty()) {
             user.setNickname(userRequestDto.getNickname());
             userRepository.save(user);
             logger.info("닉네임 변경 완료");
         }
 
-        return "닉네임 수정 완료";
+        return new UserResponseDto(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDto getUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+
+        return new UserResponseDto(user);
     }
 
     // 사용자 프로필 가져오기
-    public UserResponseDto getUserProfiles(UserRequestDto userRequestDto){
-        Optional<User> existingUserOptional = userRepository.findByUsername(userRequestDto.getUsername());
-        if (!existingUserOptional.isPresent()) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
+    @Transactional(readOnly = true)
+    public List<UserResponseDto> getUserProfiles(User currentUser) {
+        List<UserResponseDto> userResponseDto = new ArrayList<>();
 
-        User user = existingUserOptional.get();
-
-        if (user.getRole() == User.Role.ADMIN) {
+        if (currentUser.getRole() == User.Role.ADMIN) {
             List<User> users = userRepository.findAll();
-            return new UserResponseDto(users);
-        } else {
-            return new UserResponseDto(user);
+            for (User user : users) {
+                userResponseDto.add(new UserResponseDto(user));
+            }
+        } else if(currentUser.getRole() == User.Role.NORMAL){
+            User user = userRepository.findById(currentUser.getId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
+            userResponseDto.add(new UserResponseDto(user));
         }
+
+        return userResponseDto;
     }
 }

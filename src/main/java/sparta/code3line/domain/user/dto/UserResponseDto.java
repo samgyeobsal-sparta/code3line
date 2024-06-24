@@ -14,8 +14,11 @@ public class UserResponseDto {
     private String email;
     private List<User> allUsers;
 
-
     public UserResponseDto(User user){
+        this.username = user.getUsername();
+        this.roleName = user.getRole().getRoleName();
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
         this.allUsers = null;
     }
     public UserResponseDto(List<User> users) {

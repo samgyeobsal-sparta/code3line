@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sparta.code3line.common.CommonResponse;
+import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.user.dto.UserRequestDto;
 import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
@@ -13,9 +14,10 @@ import sparta.code3line.domain.user.service.PasswordVerification;
 import sparta.code3line.domain.user.service.UserService;
 import sparta.code3line.security.UserPrincipal;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-
 public class UserController {
 
     private final UserService userService;
@@ -44,7 +46,7 @@ public class UserController {
     }
 
     // admin - 특정 회원 관리자로 권한 변경
-    @PatchMapping("{userId}/verification")
+    @PatchMapping("admin/users/{userId}/verification")
     public ResponseEntity<CommonResponse<Void>> adminUser(
             @PathVariable Long userId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -56,21 +58,55 @@ public class UserController {
     }
 
     // 유저 프로필 가져오기
-    @GetMapping("/profiles")
-    public UserResponseDto getUserProfiles(UserRequestDto userRequestDto) {
-        return userService.getUserProfiles(userRequestDto);
+    @GetMapping("profiles")
+    public ResponseEntity<CommonResponse<List<UserResponseDto>>> getUserProfiles(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        if (userPrincipal == null || userPrincipal.getUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<UserResponseDto> userList = userService.getUserProfiles(userPrincipal.getUser());
+        CommonResponse<List<UserResponseDto>> response = new CommonResponse<>("프로필 조회 성공 🎉", HttpStatus.OK.value(), userList);
+        return ResponseEntity.ok(response);
     }
 
     // 유저 프로필 닉네임 수정
-    @PatchMapping("/profiles/{username}")
-    public String updateProfilesNickname(@RequestBody UserRequestDto userRequestDto) {
-        return userService.updateProfilesNickname(userRequestDto);
+    @PatchMapping("/profiles/{userId}")
+    public ResponseEntity<CommonResponse<UserResponseDto>> updateProfilesNickname(
+        @AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long userId,  @RequestBody UserRequestDto userRequestDto)
+    {
+        User currentUser = userPrincipal.getUser();
+        if (currentUser.getRole() != User.Role.ADMIN && !currentUser.getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        UserResponseDto response = userService.updateProfilesNickname(userId, userRequestDto);
+        CommonResponse<UserResponseDto> commonResponse = new CommonResponse<>(
+                "프로필 닉네임 변경 성공 🎉",  HttpStatus.OK.value(),response);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
     // 유저 비밀번호 수정
-    @PatchMapping("/profiles/{username}/pw")
-    public String updatePassword(@RequestBody UserRequestDto userRequestDto) {
-        return passwordVeriFication.updatePassword(userRequestDto);
+    @PatchMapping("/profiles/{userId}/pw")
+    public ResponseEntity<CommonResponse<UserResponseDto>> updatePassword(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long userId,
+            @RequestBody UserRequestDto userRequestDto) {
+
+        User currentUser = userPrincipal.getUser();
+
+        if (!currentUser.getRole().equals(User.Role.ADMIN) && !currentUser.getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            passwordVeriFication.updatePassword(userId, userRequestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponse<>(e.getMessage(), HttpStatus.BAD_REQUEST.value(), null));
+        }
+
+        UserResponseDto updatedUser = userService.getUserProfile(userId);
+
+        CommonResponse<UserResponseDto> response = new CommonResponse<>("비밀번호 변경 성공 🎉", HttpStatus.OK.value(), updatedUser);
+        return ResponseEntity.ok(response);
     }
 
 }
