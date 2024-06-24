@@ -42,6 +42,7 @@ public class UserService {
         }
 
         userToDelete.updateStatus(User.Status.DELETED);
+
     }
 
     @Transactional
@@ -52,10 +53,10 @@ public class UserService {
             throw new CustomException(ErrorCode.NOT_BLOCK);
         }
 
-        if(userToBlock.isBlock())
-        {
+        if (userToBlock.isBlock()) {
             throw new CustomException(ErrorCode.ALREADY_BLOCK);
         }
+
         userToBlock.updateStatus(User.Status.BLOCK);
 
     }
@@ -106,19 +107,23 @@ public class UserService {
         }
 
         return new UserResponseDto(user);
+
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto getUserProfile(Long userId) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
         return new UserResponseDto(user);
+
     }
 
     // 사용자 프로필 가져오기
     @Transactional(readOnly = true)
     public List<UserResponseDto> getUserProfiles(User currentUser) {
+
         List<UserResponseDto> userResponseDto = new ArrayList<>();
 
         if (currentUser.getRole() == User.Role.ADMIN) {
@@ -133,6 +138,7 @@ public class UserService {
         }
 
         return userResponseDto;
+
     }
 
     private User getUserById(Long userId) {

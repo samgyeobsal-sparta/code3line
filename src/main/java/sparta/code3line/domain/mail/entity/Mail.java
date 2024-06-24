@@ -11,6 +11,7 @@ import sparta.code3line.domain.user.entity.User;
 @NoArgsConstructor
 @Entity
 public class Mail extends Timestamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mail_id")
@@ -36,4 +37,5 @@ public class Mail extends Timestamp {
     public void mailAddCode(String code) {
         this.code = code;
     }
+
 }

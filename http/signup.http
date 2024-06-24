@@ -1,10 +1,11 @@
+
 ### 회원가입
 POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username" : "username6",
-  "password" : "passWord1236!",
+  "username" : "username",
+  "password" : "passWord123!",
   "email": "helloworld6@gmail.com",
   "nickname": "nickname"
 }
@@ -15,9 +16,9 @@ Content-Type: application/json
 
 {
   "username" : "username4",
+  "password": "pass1234!",
   "email": "helloworld4@gmail.com",
-  "nickname": "nickname",
-  "password": "pass1234!"
+  "nickname": "nickname"
 }
 
 ### 회원가입3
@@ -25,12 +26,13 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "email": "helloworld3@gmail.com",
-  "username": "name3",
-  "password": "pass1234!"
+  "username": "dlskdud123",
+  "password": "dlskdud123@",
+  "email": "dlskdud123@gmail.com",
+  "nickname": "code3line"
 }
 
-### 회원가입4
+### ADMIN : 회원가입
 POST http://localhost:8080/users/signup
 Content-Type: application/json
 
@@ -39,6 +41,19 @@ Content-Type: application/json
   "password" : "dlskdud124@",
   "email" : "dlskdud124@naver.com",
   "nickname" : "두유",
+  "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
+
+}
+
+### ADMIN : 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "username1",
+  "password" : "password123!",
+  "email" : "username@gmail.com",
+  "nickname" : "관리자",
   "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
 
 }

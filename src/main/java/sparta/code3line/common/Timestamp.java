@@ -23,5 +23,6 @@ public class Timestamp {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
+
 }
 

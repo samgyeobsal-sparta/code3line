@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.comment.entity.Comment;
 import sparta.code3line.domain.user.entity.User;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class LikeComment {
+public class LikeComment extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +32,5 @@ public class LikeComment {
         this.user = user;
         this.comment = comment;
     }
+
 }

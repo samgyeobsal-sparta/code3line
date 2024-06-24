@@ -29,17 +29,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = request.getHeader("Authorization");
         validateToken(accessToken);
         filterChain.doFilter(request, response);
+
     }
 
     private void validateToken(String token) {
-        if(jwtService.isValidToken(token)) {
+
+        if (jwtService.isValidToken(token)) {
             Claims claims = jwtService.getClaims(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContext context =  SecurityContextHolder.createEmptyContext();
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authentication);
             SecurityContextHolder.setContext(context);
         }
+
     }
 }

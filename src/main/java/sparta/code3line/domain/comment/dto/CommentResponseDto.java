@@ -11,16 +11,10 @@ public class CommentResponseDto {
     private Long boardId;
     private String contents;
 
-    @Builder
-    public CommentResponseDto(Long userId, Long boardId, String contents) {
-        this.userId = userId;
-        this.boardId = boardId;
-        this.contents = contents;
-    }
-
     public CommentResponseDto(Comment comment) {
         this.userId = comment.getUser().getId();
         this.boardId = comment.getBoard().getId();
         this.contents = comment.getContents();
     }
+
 }

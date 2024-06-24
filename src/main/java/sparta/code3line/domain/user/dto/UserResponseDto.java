@@ -23,8 +23,5 @@ public class UserResponseDto {
         this.profileImg = user.getProfileImg();
         this.allUsers = null;
     }
-    public UserResponseDto(List<User> users) {
-        this.allUsers = users;
-    }
 
 }

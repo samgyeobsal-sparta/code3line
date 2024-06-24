@@ -50,6 +50,10 @@ public enum ErrorCode {
     ALREADY_LIKE(HttpStatus.BAD_REQUEST, "이미 좋아요 하였습니다."),
     NOT_LIKE(HttpStatus.BAD_REQUEST, "좋아요 하지 않았습니다."),
 
+    // 이메일
+    FAIL_EMAIL(HttpStatus.BAD_REQUEST, "잘못된 이메일입니다."),
+    CODE_EXPIRED(HttpStatus.BAD_REQUEST,"만료된 인증 코드입니다."),
+
     // 게시글
     USER_DIFFERENT(HttpStatus.BAD_REQUEST, "다른 사용자의 게시물입니다."),
     NOT_AUTHORIZED(HttpStatus.BAD_REQUEST, "해당 게시물에 대한 권한이 없습니다."),

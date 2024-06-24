@@ -1,3 +1,4 @@
+
 ### 게시글 좋아요
 POST http://localhost:8080/boards/1/likes
 Content-Type: application/json

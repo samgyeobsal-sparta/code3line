@@ -1,18 +1,15 @@
 package sparta.code3line.domain.follow.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FollowRequestDto {
 
     @NotBlank
-    @JsonProperty("following_user_id")
     private Long followingUserId;
 
 }

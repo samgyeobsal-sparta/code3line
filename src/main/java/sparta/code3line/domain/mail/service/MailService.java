@@ -18,7 +18,6 @@ import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Random;
 
 @Slf4j(topic = "mailService")
@@ -27,26 +26,27 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class MailService {
 
-    private static final int MAIL_EXPIRED_TIME = 300; // 300초
+    private static final int MAIL_EXPIRED_TIME = 300;
 
     private final JavaMailSender javaMailSender;
-
     private final MailRepository mailRepository;
     private final UserRepository userRepository;
 
     public Void sendMail(MailRequestDto requestDto) {
+
         Mail mail = checkMail(requestDto.getEmail());
         mailRepository.save(mail);
         MimeMessage mailForm = createMailForm(mail);
         javaMailSender.send(mailForm);
         return null;
+
     }
 
     public Void verifyMail(VerifyRequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now();
         User user = getUserByEmail(requestDto.getEmail());
         Mail mail = mailRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 이메일입니다.")
+                () -> new CustomException(ErrorCode.FAIL_EMAIL)
         );
 
         LocalDateTime timeLimit = mail.getCreatedAt().plusSeconds(MAIL_EXPIRED_TIME);
@@ -54,7 +54,7 @@ public class MailService {
         String code = requestDto.getCode();
 
         if (now.isAfter(timeLimit)) {
-            throw new IllegalArgumentException("만료된 인증코드입니다.");
+            throw new CustomException(ErrorCode.CODE_EXPIRED);
         }
 
         if (targetCode.equals(code)) {
@@ -64,9 +64,9 @@ public class MailService {
         return null;
     }
 
-
     // 이메일 폼 : 내용, 보낸이, 받을이, 제목
     private MimeMessage createMailForm(Mail mail) {
+
         String code = createCode();
         mail.mailAddCode(code);
 
@@ -86,14 +86,17 @@ public class MailService {
             body += "<div class='code-box' style='margin-top: 50px; padding-top: 20px; color: #000000; padding-bottom: 20px; font-size: 25px; text-align: center; background-color: #f4f4f4; border-radius: 10px;'>" + code + "</div>";
             body += "</body></html>";
             messageHelper.setText(body, true);
+
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return message;
+
     }
 
     // 이메일 인증코드 생성
     private String createCode() {
+
         int numberzero = 48; // 0 아스키 코드
         int alphbetz = 122; // z 아스키 코드
         int codeLength = 8; // 인증코드의 길이
@@ -104,11 +107,14 @@ public class MailService {
                 .limit(codeLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
+
     }
 
     private Mail checkMail(String email) {
+
         User user = getUserByEmail(email);
         Mail mail;
+
         if (isExist(email)) {
             mail = getMail(email);
         } else {
@@ -118,19 +124,27 @@ public class MailService {
         }
 
         return mail;
+
     }
 
     private boolean isExist(String email) {
+
         return mailRepository.findByEmail(email).isPresent();
+
     }
 
     private Mail getMail(String email) {
+
         return mailRepository.findByEmail(email).get();
+
     }
 
     private User getUserByEmail(String email) {
+
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
         );
+
     }
+
 }

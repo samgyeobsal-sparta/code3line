@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.board.entity.Board;
-import sparta.code3line.domain.comment.entity.Comment;
 import sparta.code3line.domain.user.entity.User;
 
 @Getter
@@ -27,8 +26,9 @@ public class LikeBoard extends Timestamp {
     private Board board;
 
     @Builder
-    public LikeBoard( User user, Board board) {
+    public LikeBoard(User user, Board board) {
         this.user = user;
         this.board = board;
     }
+
 }

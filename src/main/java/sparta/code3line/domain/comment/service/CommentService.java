@@ -2,7 +2,6 @@ package sparta.code3line.domain.comment.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
@@ -13,7 +12,6 @@ import sparta.code3line.domain.comment.dto.CommentResponseDto;
 import sparta.code3line.domain.comment.entity.Comment;
 import sparta.code3line.domain.comment.repository.CommentRepository;
 import sparta.code3line.domain.user.entity.User;
-import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +23,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
-    private final ModelMapper mapper = new ModelMapper();
-
     public CommentResponseDto createComment(Long boardId, User user, CommentRequestDto requestDto) {
+
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ErrorCode.BOARD_NOT_FOUND)
         );
@@ -38,26 +35,25 @@ public class CommentService {
                 .contents(requestDto.getContents())
                 .build();
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
-        return CommentResponseDto.builder()
-                .userId(user.getId())
-                .boardId(board.getId())
-                .contents(requestDto.getContents())
-                .build();
+        return new CommentResponseDto(savedComment);
+
     }
 
     public List<CommentResponseDto> readComments(Long boardId) {
+
         List<Comment> comments = commentRepository.findAllByBoardId(boardId).orElse(null);
-        List<CommentResponseDto> responseDtos = new ArrayList<>();
+        List<CommentResponseDto> responseDto = new ArrayList<>();
 
         if(comments != null) {
             for (Comment comment : comments) {
-                responseDtos.add(new CommentResponseDto(comment));
+                responseDto.add(new CommentResponseDto(comment));
             }
         }
 
-        return responseDtos;
+        return responseDto;
+
     }
 
     @Transactional
@@ -66,20 +62,23 @@ public class CommentService {
         Comment comment = getComment(boardId, commentId, user);
 
         comment.updateContent(requestDto.getContents());
+
         return new CommentResponseDto(comment);
+
     }
 
     @Transactional
-    public Void deleteComment(Long boardId, Long commentId, User user) {
+    public void deleteComment(Long boardId, Long commentId, User user) {
 
         Comment comment = getComment(boardId, commentId, user);
 
         commentRepository.delete(comment);
-        return null;
+
     }
 
     // comment 찾아오기
     private Comment getComment(Long boardId, Long commentId, User user) {
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
@@ -93,5 +92,7 @@ public class CommentService {
         }
 
         return comment;
+
     }
+
 }
