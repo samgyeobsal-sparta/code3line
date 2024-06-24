@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -35,6 +34,7 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("getAttributes : {}", oAuth2User.getAttributes());
 
@@ -66,17 +66,19 @@ public class Oauth2UserServiceImpl extends DefaultOAuth2UserService {
                     .status(User.Status.ACTIVE)
                     .build();
             userRepository.save(user);
-        } else {
+        }
+        else {
             user = optionalUser.get();
         }
 
         UserPrincipal userPrincipal = new UserPrincipal(user);
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
-        SecurityContext context =  SecurityContextHolder.createEmptyContext();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
         return userPrincipal;
+
     }
 }

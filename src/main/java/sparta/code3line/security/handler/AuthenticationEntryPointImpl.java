@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import sparta.code3line.common.exception.CommonErrorResponse;
-import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.jwt.JwtService;
 
 import java.io.IOException;
@@ -31,14 +30,15 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         response.getWriter().write(objectMapper.writeValueAsString(
-                CommonErrorResponse.builder()
-                        .msg(message)
-                        .status(HttpStatus.FORBIDDEN.value())
-                        .error(HttpStatus.FORBIDDEN.getReasonPhrase())
-                        .path(request.getRequestURI())
-                        .timestamp(LocalDateTime.now())
-                        .build().toString()
+                        CommonErrorResponse.builder()
+                                .msg(message)
+                                .status(HttpStatus.FORBIDDEN.value())
+                                .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+                                .path(request.getRequestURI())
+                                .timestamp(LocalDateTime.now())
+                                .build().toString()
                 )
         );
     }
+
 }

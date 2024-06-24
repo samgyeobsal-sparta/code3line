@@ -2,7 +2,6 @@ package sparta.code3line.domain.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import sparta.code3line.domain.user.repository.TokenRepository;
 import sparta.code3line.jwt.JwtService;
 import sparta.code3line.security.UserPrincipal;
 
-@Slf4j(topic = "Login Process")
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -54,30 +52,39 @@ public class AuthService {
         }
 
         return new LoginResponseDto(accessJwt, refreshJwt);
+
     }
 
     @Transactional
     public Void logout(User user) {
+
         Token token = getToken(user);
         token.updateToken(null);
         return null;
+
     }
 
     private Token createToken(User user, String token, String type) {
+
         return Token.builder()
                 .user(user)
                 .token(token)
                 .tokenType(type)
                 .build();
+
     }
 
     private boolean hasToken(User user) {
+
         return tokenRepository.findByUserId(user.getId()).isPresent();
+
     }
 
     private Token getToken(User user) {
+
         return tokenRepository.findByUserId(user.getId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_TOKEN)
         );
+
     }
 }

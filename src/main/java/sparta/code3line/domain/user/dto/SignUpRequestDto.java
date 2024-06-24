@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-
 @Data
 public class SignUpRequestDto {
 
@@ -31,4 +30,5 @@ public class SignUpRequestDto {
     private String nickname;
 
     private String admin;
+
 }

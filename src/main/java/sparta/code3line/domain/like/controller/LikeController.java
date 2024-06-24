@@ -20,26 +20,58 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/boards/{id}/likes")
-    public ResponseEntity<CommonResponse<LikeResponseDto>> createLikeBoard(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<CommonResponse<LikeResponseDto>> createLikeBoard(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
         LikeResponseDto responseDto = likeService.createLikeBoard(id, principal.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("게시글 좋아요 성공", HttpStatus.OK.value(), responseDto));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(
+                "게시글 좋아요 성공 🎉",
+                HttpStatus.OK.value(),
+                responseDto));
+
     }
 
     @DeleteMapping("/boards/{id}/likes")
-    public ResponseEntity<CommonResponse<LikeResponseDto>> deleteLikeBoard(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<CommonResponse<LikeResponseDto>> deleteLikeBoard(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
         LikeResponseDto responseDto = likeService.deleteLikeBoard(id, principal.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("게시글 좋아요 취소 성공", HttpStatus.OK.value(), responseDto));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(
+                "게시글 좋아요 취소 성공 🎉",
+                HttpStatus.OK.value(),
+                responseDto));
+
     }
 
     @PostMapping("/comments/{id}/likes")
-    public ResponseEntity<CommonResponse<LikeResponseDto>> createLikeComment(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<CommonResponse<LikeResponseDto>> createLikeComment(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
         LikeResponseDto responseDto = likeService.createLikeComment(id, principal.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("댓글 좋아요 성공", HttpStatus.OK.value(), responseDto));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(
+                "댓글 좋아요 성공 🎉",
+                HttpStatus.OK.value(),
+                responseDto));
+
     }
 
     @DeleteMapping("/comments/{id}/likes")
-    public ResponseEntity<CommonResponse<LikeResponseDto>> deleteLikeComment(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<CommonResponse<LikeResponseDto>> deleteLikeComment(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
         LikeResponseDto responseDto = likeService.deleteLikeComment(id, principal.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("댓글 좋아요 취소 성공", HttpStatus.OK.value(), responseDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(
+                "댓글 좋아요 취소 성공 🎉",
+                HttpStatus.OK.value(),
+                responseDto));
+
     }
+
 }

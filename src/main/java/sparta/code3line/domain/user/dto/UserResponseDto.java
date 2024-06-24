@@ -21,8 +21,5 @@ public class UserResponseDto {
         this.email = user.getEmail();
         this.allUsers = null;
     }
-    public UserResponseDto(List<User> users) {
-        this.allUsers = users;
-    }
 
 }

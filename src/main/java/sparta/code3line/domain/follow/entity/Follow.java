@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.user.entity.User;
 
-/**
- * user 한 명이 여러명을 팔로잉 할 수 있고, 여러명의 팔로우를 가질 수 있음 : 1:n 패턴
- */
 @Entity
 @Getter
 @NoArgsConstructor
@@ -34,4 +31,5 @@ public class Follow extends Timestamp {
         this.follower = followerUser;
         this.following =  followingUser;
     }
+
 }

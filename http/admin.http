@@ -1,18 +1,17 @@
 
-### 특정 회원 삭제
-PATCH http://localhost:8080/admin/users/4/delete
+### ADMIN : 특정 회원 삭제, USER : 불가능
+PATCH http://localhost:8080/admin/users/1/delete
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 
-### 특정 회원 차단
-PATCH http://localhost:8080/admin/users/6/block
+### ADMIN : 특정 회원 차단, USER : 불가능
+PATCH http://localhost:8080/admin/users/1/block
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 
-
-### 특정 회원 관리자로 변경
-PATCH http://localhost:8080/admin/users/6/verification
+### ADMIN : 특정 회원 관리자로 변경, USER : 불가능
+PATCH http://localhost:8080/admin/users/1/verification
 Content-Type: application/json
 Authorization: Bearer {{access_token}}

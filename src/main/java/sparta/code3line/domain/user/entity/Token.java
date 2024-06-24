@@ -44,4 +44,5 @@ public class Token extends Timestamp {
     public String updateToken(String token) {
         return this.token = token;
     }
+
 }

@@ -18,10 +18,12 @@ public class SignUpController {
     private final SignUpService signUpService;
 
     @PostMapping("/signup")
-    public ResponseEntity<CommonResponse<User>> createUser(@Valid @RequestBody SignUpRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<User>> createUser(
+            @Valid @RequestBody SignUpRequestDto requestDto) {
+
         CommonResponse<User> response = new CommonResponse<>(
                 "회원가입 성공 🎉",
-                201,
+                HttpStatus.CREATED.value(),
                 signUpService.createUser(requestDto));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -29,12 +31,15 @@ public class SignUpController {
     }
 
     @PutMapping("/signout")
-    public ResponseEntity<CommonResponse<Void>> deleteUser(@RequestBody SignUpRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> deleteUser(
+            @RequestBody SignUpRequestDto requestDto) {
+
         CommonResponse<Void> response = new CommonResponse<>(
-                "회원탈퇴 성공 (┬┬﹏┬┬)",
-                204,
+                "회원탈퇴 성공 (┬┬﹏┬┬) 😱😢😭",
+                HttpStatus.OK.value(),
                 signUpService.deleteUser(requestDto));
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 }

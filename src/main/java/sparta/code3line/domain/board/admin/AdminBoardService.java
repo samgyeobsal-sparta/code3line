@@ -22,72 +22,50 @@ public class AdminBoardService {
 
     private final BoardRepository boardRepository;
 
-    // Admin : NOTICE 게시글 생성
+    // ADMIN : NOTICE 게시글 생성
     public BoardResponseDto adminAddBoard(
             User user,
             BoardRequestDto requestDto) {
-        log.info("admin : adminAddBoard 메서드 실행");
 
         Board board = Board.builder()
                 .user(user)
                 .title(requestDto.getTitle())
                 .contents(requestDto.getContents())
-                .type(Board.BoardType.NOTICE) // adminAddBoard 메서드를 사용해서 게시글을 생성하면 NOTICE 게시글로 고정
+                .type(Board.BoardType.NOTICE)
                 .build();
 
         Board adminAddBoard = boardRepository.save(board);
 
-        BoardResponseDto responseDto = new BoardResponseDto(
-                adminAddBoard.getUser().getNickname(),
-                adminAddBoard.getId(),
-                adminAddBoard.getTitle(),
-                adminAddBoard.getContents(),
-                adminAddBoard.getCreatedAt(),
-                adminAddBoard.getModifiedAt()
-        );
+        return new BoardResponseDto(adminAddBoard);
 
-        log.info("admin : adminAddBoard 메서드 실행");
-        return responseDto;
     }
 
-    // Admin : 게시글 수정
+    // ADMIN : 게시글 수정
     public BoardResponseDto adminUpdateBoard(Long boardId, BoardUpdateRequestDto requestDto) {
-        log.info("admin : adminUpdateBoard 메서드 실행");
+
         Board board = boardRepository.findById(boardId).orElseThrow(()
                 -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
-        if (requestDto.getTitle() != null) {
-            if (requestDto.getTitle().trim().isEmpty()) {
-                log.error("admin : 게시글 제목이 형식에 맞지 않음");
-                throw new CustomException(ErrorCode.BAD_REQUEST);
-            }
-            board.updateTitle(requestDto.getTitle());
-        }
-
-        if (requestDto.getContent() != null) {
-            if (requestDto.getContent().trim().isEmpty()) {
-                log.error("admin : 게시물 내용이 형식에 맞지 않음");
-                throw new CustomException(ErrorCode.BAD_REQUEST);
-            }
-            board.updateContents(requestDto.getContent());
-        }
+        board.updateTitle(requestDto.getTitle());
+        board.updateContents(requestDto.getContent());
 
         boardRepository.save(board);
 
-        log.info("admin : adminUpdateBoard 메서드 성공");
         return new BoardResponseDto(board);
+
     }
 
-    // Admin : 게시글 삭제
+    // ADMIN : 게시글 삭제
     public void adminDeleteBoard(Long boardId) {
-        log.info("admin : adminDeleteBoard 메서드 실행");
+
         Board board = boardRepository.findById(boardId).orElseThrow(()
                 -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
-        log.info("admin : adminDeleteBoard 메서드 성공");
         boardRepository.delete(board);
+
     }
 
+    // ADMIN : 특정 게시글 타입 PICK으로 변경
     @Transactional
     public void adminPickBoard(Long boardId, User currentUser) {
 
@@ -107,5 +85,6 @@ public class AdminBoardService {
         board.updateType(Board.BoardType.PICK);
 
         boardRepository.save(board);
+
     }
 }

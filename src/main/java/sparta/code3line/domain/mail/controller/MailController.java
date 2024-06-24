@@ -19,22 +19,28 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<Void>> sendMail(@RequestBody MailRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> sendMail(
+            @RequestBody MailRequestDto requestDto) {
+
         CommonResponse<Void> response = new CommonResponse<>(
                 requestDto.getEmail() + "로 인증 메일이 전송되었습니다.",
-                204,
+                HttpStatus.OK.value(),
                 mailService.sendMail(requestDto));
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PutMapping("/verification")
-    public ResponseEntity<CommonResponse<Void>> verifyMail(@RequestBody VerifyRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<Void>> verifyMail(
+            @RequestBody VerifyRequestDto requestDto) {
+
         CommonResponse<Void> response = new CommonResponse<>(
                 requestDto.getEmail() + "이 인증되었습니다.",
-                204,
+                HttpStatus.OK.value(),
                 mailService.verifyMail(requestDto));
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 }

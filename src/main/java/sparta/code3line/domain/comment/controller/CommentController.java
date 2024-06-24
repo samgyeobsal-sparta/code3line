@@ -26,51 +26,56 @@ public class CommentController {
                                                                             @RequestBody CommentRequestDto requestDto) {
 
         CommonResponse<CommentResponseDto> response = new CommonResponse<>(
-                "댓글 생성 완료",
-                201,
+                "댓글 생성 완료 🎉",
+                HttpStatus.CREATED.value(),
                 commentService.createComment(boardId, principal.getUser(), requestDto)
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> readComments (@PathVariable Long boardId) {
+    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> readComments(@PathVariable Long boardId) {
 
         CommonResponse<List<CommentResponseDto>> response = new CommonResponse<>(
-                "댓글 전체 조회 완료",
-                200,
+                "댓글 전체 조회 완료 🎉",
+                HttpStatus.OK.value(),
                 commentService.readComments(boardId)
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PutMapping("/comment/{commentId}")
-    public ResponseEntity<CommonResponse<CommentResponseDto>> updateComment (@PathVariable Long boardId,
-                                                                             @PathVariable Long commentId,
-                                                                             @AuthenticationPrincipal UserPrincipal principal,
-                                                                             @RequestBody CommentRequestDto requestDto) {
+    public ResponseEntity<CommonResponse<CommentResponseDto>> updateComment(@PathVariable Long boardId,
+                                                                            @PathVariable Long commentId,
+                                                                            @AuthenticationPrincipal UserPrincipal principal,
+                                                                            @RequestBody CommentRequestDto requestDto) {
 
         CommonResponse<CommentResponseDto> response = new CommonResponse<>(
-                "댓글 수정 완료",
-                200,
+                "댓글 수정 완료 🎉",
+                HttpStatus.OK.value(),
                 commentService.updateComment(boardId, commentId, principal.getUser(), requestDto)
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<CommonResponse<Void>> deleteComment(@PathVariable Long boardId,
                                                               @PathVariable Long commentId,
                                                               @AuthenticationPrincipal UserPrincipal principal) {
+        commentService.deleteComment(boardId, commentId, principal.getUser());
         CommonResponse<Void> response = new CommonResponse<>(
-                "댓글 삭제 완료",
-                204,
-                commentService.deleteComment(boardId, commentId, principal.getUser())
+                "댓글 삭제 완료 🎉",
+                HttpStatus.OK.value(),
+                null
         );
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 }

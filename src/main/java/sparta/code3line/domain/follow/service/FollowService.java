@@ -10,7 +10,6 @@ import sparta.code3line.domain.user.repository.UserRepository;
 
 import static sparta.code3line.common.exception.ErrorCode.*;
 
-
 @Service
 @RequiredArgsConstructor
 public class FollowService {
@@ -36,6 +35,7 @@ public class FollowService {
 
         Follow follow = new Follow(followingUser, follower);
         followRepository.save(follow);
+
     }
 
     // 언팔로우 기능
@@ -49,18 +49,22 @@ public class FollowService {
                 .orElseThrow(() -> new CustomException(NOT_FOLLOWED));
 
         followRepository.delete(follow);
+
     }
 
-    // 사용자 조회 메서드
+    // 사용자 조회
     private User findUser(Long userId) {
 
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USERNAME_NOT_FOUND));
+
     }
 
 
     // 이미 팔로우 중인지 확인
     private boolean isAlreadyFollowing(Long followingUserId, Long followerId) {
+
         return followRepository.findByFollowingIdAndFollowerId(followingUserId, followerId).isPresent();
+
     }
 }

@@ -22,22 +22,34 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<CommonResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto requestDto) throws IOException {
+    public ResponseEntity<CommonResponse<LoginResponseDto>> login(
+            @RequestBody LoginRequestDto requestDto) throws IOException {
 
         LoginResponseDto responseDto = authService.login(requestDto);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", responseDto.getAccessToken());
 
-        CommonResponse<LoginResponseDto> response = new CommonResponse<LoginResponseDto>("로그인 성공 🎉", 200, responseDto);
+        CommonResponse<LoginResponseDto> response = new CommonResponse<LoginResponseDto>(
+                "로그인 성공 🎉",
+                HttpStatus.OK.value(),
+                responseDto);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+
     }
 
     @PatchMapping("/logout")
-    public ResponseEntity<CommonResponse<Void>> logout(@AuthenticationPrincipal UserPrincipal principal) {
-        CommonResponse<Void> response = new CommonResponse<Void>("로그아웃 성공 🎉", 204, authService.logout(principal.getUser()));
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    public ResponseEntity<CommonResponse<Void>> logout(
+            @AuthenticationPrincipal UserPrincipal principal) {
+
+        CommonResponse<Void> response = new CommonResponse<Void>(
+                "로그아웃 성공 🎉",
+                HttpStatus.OK.value(),
+                authService.logout(principal.getUser()));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
 }

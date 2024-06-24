@@ -17,22 +17,25 @@ import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        User user = ((UserPrincipal)authentication.getPrincipal()).getUser();
+
+        User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
 
         String accessJwt = jwtService.generateAccessToken(user.getUsername());
         String refreshJwt = jwtService.generateRefreshToken(user.getUsername());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto(accessJwt, refreshJwt);
 
-        // JSON 형태로 토큰을 응답으로 반환
         response.setHeader("Authorization", accessJwt);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.getWriter().write(objectMapper.writeValueAsString(loginResponseDto));
+
     }
+
 }

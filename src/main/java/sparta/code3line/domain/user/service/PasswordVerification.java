@@ -22,7 +22,9 @@ public class PasswordVerification {
     // 비밀번호 변경
     @Transactional
     public void updatePassword(Long userId, UserRequestDto userRequestDto) {
+
         Optional<User> existingUserOptional = userRepository.findById(userId);
+        
         if (!existingUserOptional.isPresent()) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
@@ -53,7 +55,7 @@ public class PasswordVerification {
         user.setPassword(passwordEncoder.encode(newpassword));
 
         userRepository.save(user);
-        logger.info("비밀번호 변경 완료");
+
     }
 
 }

@@ -1,3 +1,4 @@
+
 ### 로그인
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -12,18 +13,13 @@ Content-Type: application/json
     client.global.set("refresh_token", response.body.result.refreshToken);
 %}
 
-### 로그아웃
-PATCH http://localhost:8080/auth/logout
-Content-Type: application/json
-Authorization: Bearer {{access_token}}
-
-### 로그인2
+### 로그인2 - 테스트
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "name2",
-  "password": "pass1234!"
+  "username": "username",
+  "password": "password123!"
 }
 
 > {%
@@ -31,12 +27,17 @@ Content-Type: application/json
     client.global.set("refresh_token", response.body.result.refreshToken);
 %}
 
+### 로그아웃
+PATCH http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
 ### 이메일 전송
 POST http://localhost:8080/users/email
 Content-Type: application/json
 
 {
-  "email": "helloworld@gmail.com"
+  "email": "dlskdud123@gmail.com"
 }
 
 ### 이메일 검증
@@ -44,6 +45,6 @@ PUT http://localhost:8080/users/email/verification
 Content-Type: application/json
 
 {
-  "email": "helloworld@gmail.com",
+  "email": "dlskdud123@gmail.com",
   "code":"13TZDT5Y"
 }

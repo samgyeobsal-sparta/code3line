@@ -30,26 +30,35 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
+
         return new JwtAuthenticationFilter(jwtService, userDetailsService);
+
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+
         return configuration.getAuthenticationManager();
+
     }
 
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
+
         return new OAuth2AuthenticationSuccessHandler(jwtService, objectMapper);
+
     }
 
     @Bean
     AuthenticationEntryPoint authenticationEntryPoint() {
+
         return new AuthenticationEntryPointImpl(jwtService, objectMapper);
+
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
 
@@ -73,8 +82,8 @@ public class SecurityConfig {
                 .successHandler(oAuth2AuthenticationSuccessHandler())
         );
 
-
         return http.build();
+
     }
 
 }

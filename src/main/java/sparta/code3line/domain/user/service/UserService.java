@@ -27,6 +27,7 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId, User currentUser) {
+
         User userToDelete = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
@@ -40,10 +41,12 @@ public class UserService {
         }
 
         userToDelete.updateStatus(User.Status.DELETED);
+
     }
 
     @Transactional
     public void blockUser(Long userId, User currentUser) {
+
         User userToBlock = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
@@ -52,16 +55,17 @@ public class UserService {
             throw new CustomException(ErrorCode.NOT_BLOCK);
         }
 
-        if(userToBlock.isBlock())
-        {
+        if (userToBlock.isBlock()) {
             throw new CustomException(ErrorCode.ALREADY_BLOCK);
         }
+
         userToBlock.updateStatus(User.Status.BLOCK);
 
     }
 
     @Transactional
     public void adminUser(Long userId, User currentUser) {
+
         User userToAdmin = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
@@ -88,7 +92,9 @@ public class UserService {
     // 닉네임 변경
     @Transactional
     public UserResponseDto updateProfilesNickname(Long userId, UserRequestDto userRequestDto) {
+
         Optional<User> userOptional = userRepository.findById(userId);
+
         if (!userOptional.isPresent()) {
             throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
         }
@@ -102,19 +108,23 @@ public class UserService {
         }
 
         return new UserResponseDto(user);
+
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto getUserProfile(Long userId) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
         return new UserResponseDto(user);
+
     }
 
     // 사용자 프로필 가져오기
     @Transactional(readOnly = true)
     public List<UserResponseDto> getUserProfiles(User currentUser) {
+
         List<UserResponseDto> userResponseDto = new ArrayList<>();
 
         if (currentUser.getRole() == User.Role.ADMIN) {
@@ -122,12 +132,15 @@ public class UserService {
             for (User user : users) {
                 userResponseDto.add(new UserResponseDto(user));
             }
-        } else if(currentUser.getRole() == User.Role.NORMAL){
+        }
+        else if (currentUser.getRole() == User.Role.NORMAL) {
             User user = userRepository.findById(currentUser.getId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USERNAME_NOT_FOUND));
             userResponseDto.add(new UserResponseDto(user));
         }
 
         return userResponseDto;
+
     }
+
 }

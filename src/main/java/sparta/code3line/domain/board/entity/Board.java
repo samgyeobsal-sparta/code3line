@@ -33,10 +33,12 @@ public class Board extends Timestamp {
 
     @Builder
     public Board(User user, String title, String contents, BoardType type) {
+
         this.user = user;
         this.title = title;
         this.contents = contents;
         this.type = type;
+
     }
 
     public void updateTitle(String title) {
@@ -46,8 +48,8 @@ public class Board extends Timestamp {
     public void updateContents(String contents) {
         this.contents = contents;
     }
-    public void updateType(BoardType type)
-    {
+
+    public void updateType(BoardType type) {
         this.type = type;
     }
 
@@ -59,4 +61,5 @@ public class Board extends Timestamp {
         // 최상단 고정 게시물
         PICK
     }
+
 }
