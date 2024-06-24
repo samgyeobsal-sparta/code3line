@@ -42,7 +42,7 @@ public class JwtService {
     public static final String BEARER_PREFIX = "Bearer ";
 
     // 권한 부여를 위한 AUTHORIZATION_KEY 설정
-//    public static final String AUTHORIZATION_KEY = "role";
+    public static final String AUTHORIZATION_KEY = "role";
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -93,7 +93,7 @@ public class JwtService {
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
-//                        .claim(AUTHORIZATION_KEY, role)  // 유저 권한 추가시 주석제거 후 사용
+   //                     .claim(AUTHORIZATION_KEY, role)  // 유저 권한 추가시 주석제거 후 사용
                         .setIssuedAt(now)
                         .setExpiration(new Date(now.getTime() + expirationTime))
                         .signWith(key, signatureAlgorithm)
