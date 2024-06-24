@@ -14,9 +14,9 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username" : "username1",
-  "email": "helloworld2@gmail.com",
-  "username": "name2",
+  "username" : "username4",
+  "email": "helloworld4@gmail.com",
+  "nickname": "nickname",
   "password": "pass1234!"
 }
 

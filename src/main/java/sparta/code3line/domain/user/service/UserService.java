@@ -65,16 +65,24 @@ public class UserService {
         User userToAdmin = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
+
         if (!currentUser.getRole().equals(User.Role.ADMIN)) {
             throw new CustomException(ErrorCode.NOT_ADMIN);
         }
 
-        if(userToAdmin.isUserToAdmin())
-        {
+        if (userToAdmin.isUserToAdmin()) {
             throw new CustomException(ErrorCode.ALREADY_ADMIN);
         }
-        userToAdmin.updateRole(User.Role.ADMIN);
 
+        if (userToAdmin.getStatus() == User.Status.DELETED) {
+            throw new CustomException(ErrorCode.ALREADY_DELETED);
+        }
+
+        if (userToAdmin.getStatus() == User.Status.BLOCK) {
+            throw new CustomException(ErrorCode.ALREADY_BLOCK);
+        }
+
+        userToAdmin.updateRole(User.Role.ADMIN);
     }
 
     // 닉네임 변경
