@@ -70,9 +70,14 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request ->
                 request
-                        .requestMatchers(HttpMethod.PATCH, "/auth/logout").authenticated()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/users/signup").permitAll()
+                        .requestMatchers("/users/email/**").permitAll()
+                        .requestMatchers("/auth/reissue").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/boards/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/comments/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().permitAll());
+                        .anyRequest().authenticated());
 
 
         http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);

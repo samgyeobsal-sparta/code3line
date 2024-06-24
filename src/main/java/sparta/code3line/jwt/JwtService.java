@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import sparta.code3line.common.exception.CustomException;
+import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.user.repository.UserRepository;
 
 import java.security.Key;
@@ -17,8 +19,6 @@ import java.util.function.Function;
 @Slf4j(topic = "JwtService")
 @Component
 public class JwtService {
-
-    private UserRepository userRepository;
 
     // 환경변수에서 JWT 시크릿키 가져오기~
     @Value("${jwt.key}")
@@ -36,28 +36,18 @@ public class JwtService {
 
     public static final String BEARER_PREFIX = "Bearer ";
 
-    // 권한 부여를 위한 AUTHORIZATION_KEY 설정
-    public static final String AUTHORIZATION_KEY = "role";
-
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     // 엑세스 토큰 만료시 토큰 재발급
-//    public String regenerateAccessToken(String refreshToken) {
-//        log.info("regenerateAccessToken 메서드 실행");
-//
-//        if (isValidToken(refreshToken)) {
-//            log.error("리프레쉬 토큰 유효하지 않음.");
-//            return null;
-//        }
-//
-//        if (!isTokenExpired(refreshToken)) {
-//            log.error("리프레쉬 토큰 만료되었음.");
-//            return null;
-//        }
-//
-//        String username = extractUsername(refreshToken);
-//        return generateAccessToken(username);
-//    }
+    public String regenerateAccessToken(String refreshToken, String username) {
+
+        if (!isValidToken(refreshToken)) {
+            throw new CustomException(ErrorCode.TOKEN_INVALID);
+        }
+
+        return generateAccessToken(username);
+
+    }
 
     // 토큰 디코딩
     @PostConstruct

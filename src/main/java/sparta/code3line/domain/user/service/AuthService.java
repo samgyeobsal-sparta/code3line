@@ -1,5 +1,6 @@
 package sparta.code3line.domain.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,11 +11,14 @@ import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.user.dto.LoginRequestDto;
 import sparta.code3line.domain.user.dto.LoginResponseDto;
+import sparta.code3line.domain.user.dto.ReIssueAccessTokenRequestDto;
 import sparta.code3line.domain.user.entity.Token;
 import sparta.code3line.domain.user.entity.User;
 import sparta.code3line.domain.user.repository.TokenRepository;
 import sparta.code3line.jwt.JwtService;
 import sparta.code3line.security.UserPrincipal;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +68,17 @@ public class AuthService {
 
     }
 
+    public String reissueAccessToken(ReIssueAccessTokenRequestDto requestDto) {
+
+        Token refreshToken = tokenRepository.findByToken(requestDto.getToken()).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_TOKEN)
+        );
+
+        User user = refreshToken.getUser();
+
+        return jwtService.regenerateAccessToken(refreshToken.getToken(), user.getUsername());
+    }
+
     private Token createToken(User user, String token, String type) {
 
         return Token.builder()
@@ -87,4 +102,5 @@ public class AuthService {
         );
 
     }
+
 }
