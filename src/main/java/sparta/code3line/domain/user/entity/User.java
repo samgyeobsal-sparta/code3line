@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import sparta.code3line.common.Timestamp;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
-import sparta.code3line.domain.follow.entity.Follow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +46,6 @@ public class User extends Timestamp {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
-
-    /*
-    @OneToMany(mappedBy = "following")
-    private List<Follow> followerList;
-
-    @OneToMany(mappedBy = "follower")
-    private List<Follow> followingList;
-
-     */
 
     @ElementCollection
     @CollectionTable(name = "user_previous_passwords", joinColumns = @JoinColumn(name = "user_id"))

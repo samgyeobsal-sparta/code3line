@@ -68,12 +68,19 @@ public class UserService {
             throw new CustomException(ErrorCode.NOT_ADMIN);
         }
 
-        if(userToAdmin.isUserToAdmin())
-        {
+        if (userToAdmin.isUserToAdmin()) {
             throw new CustomException(ErrorCode.ALREADY_ADMIN);
         }
-        userToAdmin.updateRole(User.Role.ADMIN);
 
+        if (userToAdmin.getStatus() == User.Status.DELETED) {
+            throw new CustomException(ErrorCode.ALREADY_DELETED);
+        }
+
+        if (userToAdmin.getStatus() == User.Status.BLOCK) {
+            throw new CustomException(ErrorCode.ALREADY_BLOCK);
+        }
+
+        userToAdmin.updateRole(User.Role.ADMIN);
     }
 
     // 프로필 변경
@@ -99,7 +106,6 @@ public class UserService {
         }
 
         return new UserResponseDto(user);
-
     }
 
     @Transactional(readOnly = true)
