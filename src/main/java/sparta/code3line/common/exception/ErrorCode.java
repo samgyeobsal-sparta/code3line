@@ -52,6 +52,7 @@ public enum ErrorCode {
 
     // 게시글
     USER_DIFFERENT(HttpStatus.BAD_REQUEST, "다른 사용자의 게시물입니다."),
+    NOT_AUTHORIZED(HttpStatus.BAD_REQUEST, "해당 게시물에 대한 권한이 없습니다."),
 
     // 파일
     FILE_IS_EMPTY(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
