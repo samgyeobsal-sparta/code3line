@@ -11,7 +11,7 @@ POST http://localhost:8080/users/email
 Content-Type: application/json
 
 {
-  "email": "helloworld2@gmail.com"
+  "email": "dlskdud123@naver.com"
 }
 
 ### 인증메일전송
@@ -19,7 +19,7 @@ POST http://localhost:8080/users/email
 Content-Type: application/json
 
 {
-  "email": "helloworld3@gmail.com"
+  "email": "dlskdud123@naver.com"
 }
 
 ### 메일인증
@@ -27,6 +27,6 @@ PUT http://localhost:8080/users/email/verification
 Content-Type: application/json
 
 {
-  "email": "helloworld@gmail.com",
-  "code": "RaiuJqlz"
+  "email": "dlskdud123@naver.com",
+  "code": "DtT0JJxX"
 }

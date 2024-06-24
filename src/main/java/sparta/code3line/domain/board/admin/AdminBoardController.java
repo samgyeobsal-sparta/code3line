@@ -10,12 +10,16 @@ import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
+import sparta.code3line.domain.board.entity.Board;
+import sparta.code3line.domain.user.entity.User;
+import sparta.code3line.domain.user.service.UserService;
 import sparta.code3line.security.UserPrincipal;
 
 @RestController
 @RequiredArgsConstructor
 public class AdminBoardController {
     private final AdminBoardService adminBoardService;
+    private final UserService userService;
 
     // 어드민 : 공지 게시물 생성
     @PostMapping("/admin/boards")
@@ -63,4 +67,14 @@ public class AdminBoardController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
     }
 
+    @PatchMapping("/admin/boards/{boardId}/pick")
+    public ResponseEntity<CommonResponse<Void>> adminPickBoard(
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        User user = userPrincipal.getUser();
+        adminBoardService.adminPickBoard(boardId, user);
+        CommonResponse<Void> response = new CommonResponse<>("게시글 상태 변경", HttpStatus.OK.value(), null);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

@@ -52,7 +52,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
-    // 일반 게시글 전체 조회
+    // 공지 게시글 전체 조회
     @GetMapping("/boards/notice")
     public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllNoticeBoards(
             @RequestParam(defaultValue = "1") int page
@@ -67,7 +67,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
-    // 공지 게시글 전체 조회
+    // 일반 게시글 전체 조회
     @GetMapping("/boards/normal")
     public ResponseEntity<CommonResponse<Page<BoardResponseDto>>> getAllNormalBoards(
             @RequestParam(defaultValue = "1") int page

@@ -3,6 +3,7 @@ package sparta.code3line.domain.board.admin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
@@ -11,6 +12,8 @@ import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
 import sparta.code3line.domain.board.entity.Board;
 import sparta.code3line.domain.board.repository.BoardRepository;
 import sparta.code3line.domain.user.entity.User;
+
+import java.util.Optional;
 
 @Slf4j(topic = "AdminBoardService")
 @Service
@@ -83,5 +86,26 @@ public class AdminBoardService {
 
         log.info("admin : adminDeleteBoard 메서드 성공");
         boardRepository.delete(board);
+    }
+
+    @Transactional
+    public void adminPickBoard(Long boardId, User currentUser) {
+
+        Optional<Board> currentPickBoardOptional = boardRepository.findByType(Board.BoardType.PICK);
+
+        if (currentPickBoardOptional.isPresent()) {
+            Board currentPickBoard = currentPickBoardOptional.get();
+            currentPickBoard.updateType(Board.BoardType.NORMAL);
+            boardRepository.save(currentPickBoard);
+
+        }
+
+        Board board = boardRepository.findById(boardId).orElseThrow((
+                ) -> { return new CustomException(ErrorCode.BOARD_NOT_FOUND);}
+        );
+
+        board.updateType(Board.BoardType.PICK);
+
+        boardRepository.save(board);
     }
 }

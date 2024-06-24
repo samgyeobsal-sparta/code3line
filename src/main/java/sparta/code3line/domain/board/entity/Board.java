@@ -46,11 +46,17 @@ public class Board extends Timestamp {
     public void updateContents(String contents) {
         this.contents = contents;
     }
+    public void updateType(BoardType type)
+    {
+        this.type = type;
+    }
 
     public enum BoardType {
         // 일반 게시물
         NORMAL,
         // 공지 게시물
-        NOTICE
+        NOTICE,
+        // 최상단 고정 게시물
+        PICK
     }
 }

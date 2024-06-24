@@ -29,7 +29,6 @@ public class BoardResponseDto {
         this.modifiedAt = modifiedAt;
     }
 
-
     public BoardResponseDto(Board board) {
         this.nickname = board.getUser().getNickname();
         this.boardId = board.getId();

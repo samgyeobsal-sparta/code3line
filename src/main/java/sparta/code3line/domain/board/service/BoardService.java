@@ -2,11 +2,9 @@ package sparta.code3line.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
@@ -20,6 +18,8 @@ import sparta.code3line.domain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "BoardService")
 @Service
@@ -100,16 +100,19 @@ public class BoardService {
     }
     // 일반 + 공지 게시글 전체 조회
     public Page<BoardResponseDto> getAllBoards(int page, int size) {
-        log.info("getAllBoards 메서드 실행");
-
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Board> boardPage = boardRepository.findAll(pageable);
+        Optional<Board> pickBoardOptional = boardRepository.findByType(Board.BoardType.PICK);
 
-        log.info("getAllBoards 메서드 성공");
-        return boardPage.map(BoardResponseDto::new);
+        List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+        pickBoardOptional.ifPresent(pickBoard -> boardResponseDtoList.add(new BoardResponseDto(pickBoard)));
+
+        Page<Board> boardPage = boardRepository.findAllByTypeNot(Board.BoardType.PICK, (PageRequest) pageable);
+        for (Board board : boardPage.getContent()) {
+            boardResponseDtoList.add(new BoardResponseDto(board));
+        }
+        return new PageImpl<>(boardResponseDtoList, pageable, boardPage.getTotalElements());
     }
 
     // 공지 게시글 전체 조회

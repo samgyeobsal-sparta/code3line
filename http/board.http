@@ -1,3 +1,13 @@
+### 조회 - 공지 + 일반 게시글
+GET http://localhost:8080/boards
+
+### 조회 - 공지 게시글
+GET http://localhost:8080/boards/notice
+
+### 조회 - 일반 게시글
+GET http://localhost:8080/boards/normal
+
+
 ### 게시글 생성
 POST http://localhost:8080/boards
 Content-Type: application/json
@@ -5,5 +15,40 @@ Authorization: Bearer {{access_token}}
 
 {
 "title": "title",
-"content": "content"
+"contents": "content"
+}
+
+### 특정 게시글 타입 변경 - Pick
+PATCH  http://localhost:8080/admin/boards/5/pick
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### amin - 공지 게시글 작성
+POST http://localhost:8080/admin/boards
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+"title": "title",
+"contents": "content"
+}
+
+### amin - 공지 게시글 수정
+PUT http://localhost:8080/admin/boards/3
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "title": "title",
+  "contents": "content"
+}
+
+### amin - 공지 게시글 삭제
+DELETE http://localhost:8080/admin/boards/2
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+"title": "title",
+"contents": "content"
 }
