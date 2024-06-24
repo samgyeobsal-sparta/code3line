@@ -76,6 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/reissue").permitAll()
                         .requestMatchers(HttpMethod.GET,  "/boards/**").permitAll()
                         .requestMatchers(HttpMethod.GET,  "/comments/**").permitAll()
+                        .requestMatchers("login.html").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 

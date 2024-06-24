@@ -1,0 +1,23 @@
+### 2-1. 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "username",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 2-2. 로그아웃
+PATCH http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 2-3. 회원 탈퇴
+PUT http://localhost:8080/users/signout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

@@ -52,20 +52,7 @@ public class SignUpService {
     }
 
     @Transactional
-    public Void deleteUser(SignUpRequestDto signUpRequestDto) {
-
-        User user = userRepository.findByUsername(signUpRequestDto.getUsername()).orElseThrow(
-                () -> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
-        );
-
-        // 아이디와 비밀번호 검증 로직
-        if (!passwordEncoder.matches(signUpRequestDto.getPassword(), user.getPassword())) {
-            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
-        }
-
-        if (user.getStatus().equals(User.Status.DELETED)) {
-            throw new CustomException(ErrorCode.ALREADY_DELETED);
-        }
+    public Void deleteUser(User user) {
 
         // 사용자 상태를 탈퇴로 설정
         user.updateStatus(User.Status.DELETED);
