@@ -17,18 +17,20 @@
 </div>
 <br>
 
-# 목차
-- [👨‍👦‍👦👩‍👧 Team 🥓](👨‍👦‍👦👩‍👧-Team-🥓)
-- [🎨 Tech Stack](🎨-Tech-Stack)
-- [🛫 Features](🛫-Features)
-- [🎯 구현 기능](🎯-구현-기능)
-- [📑 Technical Documentation](📑-Technical-Documentation)
+## 목차
+- [👨‍👦‍👦👩‍👧 Team 🥓](#team)
+- [🎨 Tech Stack](#tech-stack)
+- [🛫 Features](#features)
+- [🎯 구현 기능](#rngus)
+- [📑 Technical Documentation](#tech)
+- [🌌환경변수](#ghksrud)
 
 <br>
 
+<div id="team">
+
 # 👨‍👦‍👦👩‍👧 Team 🥓
 
-[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/teamsparta/c9451bbd45cb4097a00f5e7b154fe6da?pvs=4)
 
 
 <table>
@@ -137,6 +139,7 @@
 
 <br>
 
+<div id="tech-stack">
 
 # 🎨 Tech Stack
 
@@ -147,12 +150,16 @@
 | Langage    | ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)                  | JDK17              |
 | Database   | ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) <br/> ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) |  8.0.28 <br/>  3.8    |
 | Tools      | ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)  ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)       |     |
+| |[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/teamsparta/c9451bbd45cb4097a00f5e7b154fe6da?pvs=4)
+ 
 
 
 📌 개발 기간 : 2024.06.19 ~ 2024.06.24 
 
 
 <br>
+
+<div id="features">
 
 # 🛫 Features
 
@@ -197,16 +204,17 @@
 
 <br>
 
+<div id="rngus">
 
 # 🎯 구현 기능
 <details>
 <summary>🥉 필수 구현</summary>
 <div markdown="1">
 
-- [x] 1 단계
-- [x] 2 단계
-- [x] 3 단계
-- [x] 4 단계
+- [x] 1 단계 : 사용자 인증 기능 
+- [x] 2 단계 : 프로필 관리
+- [x] 3 단계 : 게시물 CRUD 기능
+- [x] 4 단계 : 댓글 CRUD 기능
 </div>
 </details>
 
@@ -214,10 +222,10 @@
 <summary>🥈 추가 구현</summary>
 <div markdown="1">
 
-- [x] 1 단계
-- [x] 2 단계
-- [x] 3 단계
-- [x] 4 단계
+- [x] 1 단계 : 백오피스 만들기
+- [x] 2 단계 : 좋아요 기능
+- [x] 3 단계 : 팔로우 기능
+- [x] 4 단계 : 소셜 로그인 기능
 </div>
 </details>
 
@@ -225,13 +233,15 @@
 <summary>🥇 명예의 전당</summary>
 <div markdown="1">
 
-- [X] 1 단계
-- [x] 2 단계
+- [X] 1 단계 - 프로필 사진 업로드 기능
+- [x] 2 단계 - 게시물 멀티미디어 지원 기능
 
 </div>
 </details>
 
 <br>
+
+<div id="tech">
 
 # 📑 Technical Documentation
 
@@ -339,6 +349,8 @@
 
 <br>
 
+<div id="ghksrud">
+  
 # 🌌환경변수
 ```
 JWT_SECRET_KEY={value}
