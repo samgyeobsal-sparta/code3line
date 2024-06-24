@@ -26,8 +26,8 @@ public class BoardController {
     // 게시글 생성
     @PostMapping("/boards")
     public ResponseEntity<CommonResponse<BoardResponseDto>> addBoard(
-            @Valid @RequestBody BoardRequestDto requestDto,
-            @RequestPart List<MultipartFile> fileList,
+            @RequestPart(value = "board") BoardRequestDto requestDto,
+            @RequestPart(value = "file") List<MultipartFile> fileList,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         BoardResponseDto responseDto = boardService.addBoard(userPrincipal.getUser(), requestDto, fileList);
@@ -117,8 +117,8 @@ public class BoardController {
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId,
-            @Valid @RequestBody BoardUpdateRequestDto requestDto,
-            @RequestPart List<MultipartFile> fileList
+            @RequestPart(value = "board") @Valid BoardUpdateRequestDto requestDto,
+            @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ) {
 
         BoardResponseDto responseDto = boardService.updateBoard(userPrincipal.getUser(), boardId, requestDto, fileList);

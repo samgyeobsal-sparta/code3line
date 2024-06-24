@@ -27,6 +27,7 @@ import java.util.Optional;
 @Slf4j(topic = "BoardService")
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;

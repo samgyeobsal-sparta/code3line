@@ -4,9 +4,9 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username" : "username",
-  "password" : "passWord123!",
-  "email": "helloworld6@gmail.com",
+  "username" : "username1",
+  "password" : "pass1234!",
+  "email": "helloworld1@gmail.com",
   "nickname": "nickname"
 }
 
@@ -15,9 +15,9 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username" : "username4",
+  "username" : "username2",
   "password": "pass1234!",
-  "email": "helloworld4@gmail.com",
+  "email": "helloworld2@gmail.com",
   "nickname": "nickname"
 }
 
@@ -26,9 +26,9 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username": "dlskdud123",
-  "password": "dlskdud123@",
-  "email": "dlskdud123@gmail.com",
+  "username": "username3",
+  "password": "pass1234!",
+  "email": "helloworld3@gmail.com",
   "nickname": "code3line"
 }
 
@@ -37,10 +37,10 @@ POST http://localhost:8080/users/signup
 Content-Type: application/json
 
 {
-  "username" : "dlskdud124",
-  "password" : "dlskdud124@",
-  "email" : "dlskdud124@naver.com",
-  "nickname" : "두유",
+  "username" : "admin",
+  "password" : "pass1234!",
+  "email" : "admin@gmail.com",
+  "nickname" : "admin",
   "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
 
 }

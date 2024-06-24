@@ -26,6 +26,7 @@ public class FileController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
     @DeleteMapping("/delete")
@@ -36,6 +37,8 @@ public class FileController {
                 204,
                  fileService.deleteFile(fileUrl)
         );
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+
     }
 }
