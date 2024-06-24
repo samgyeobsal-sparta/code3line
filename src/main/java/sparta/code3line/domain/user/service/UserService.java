@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
+import sparta.code3line.domain.file.FileService;
 import sparta.code3line.domain.user.dto.UserRequestDto;
 import sparta.code3line.domain.user.dto.UserResponseDto;
 import sparta.code3line.domain.user.entity.User;
@@ -24,12 +26,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
+    private final FileService fileService;
+
 
     @Transactional
     public void deleteUser(Long userId, User currentUser) {
-        User userToDelete = userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND)
-        );
+        User userToDelete = getUserById(userId);
 
         if (!currentUser.getRole().equals(User.Role.ADMIN)) {
             throw new CustomException(ErrorCode.NOT_DELETED);
@@ -44,9 +46,7 @@ public class UserService {
 
     @Transactional
     public void blockUser(Long userId, User currentUser) {
-        User userToBlock = userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND)
-        );
+        User userToBlock = getUserById(userId);
 
         if (!currentUser.getRole().equals(User.Role.ADMIN)) {
             throw new CustomException(ErrorCode.NOT_BLOCK);
@@ -62,9 +62,8 @@ public class UserService {
 
     @Transactional
     public void adminUser(Long userId, User currentUser) {
-        User userToAdmin = userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND)
-        );
+        User userToAdmin = getUserById(userId);
+
         if (!currentUser.getRole().equals(User.Role.ADMIN)) {
             throw new CustomException(ErrorCode.NOT_ADMIN);
         }
@@ -77,15 +76,10 @@ public class UserService {
 
     }
 
-    // 닉네임 변경
+    // 프로필 변경
     @Transactional
-    public UserResponseDto updateProfilesNickname(Long userId, UserRequestDto userRequestDto) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
-            throw new CustomException(ErrorCode.USERNAME_NOT_FOUND);
-        }
-
-        User user = userOptional.get();
+    public UserResponseDto updateProfiles(Long userId, UserRequestDto userRequestDto, List<MultipartFile> fileList) {
+        User user = getUserById(userId);
 
         if (userRequestDto.getNickname() != null && !userRequestDto.getNickname().isEmpty()) {
             user.setNickname(userRequestDto.getNickname());
@@ -93,7 +87,19 @@ public class UserService {
             logger.info("닉네임 변경 완료");
         }
 
+        if (fileList != null) {
+
+            if (!user.getProfileImg().isEmpty()) {
+                fileService.deleteFile(user.getProfileImg());
+            }
+
+            user.updateProfileImg(fileService.uploadFile(fileList).get(0));
+            userRepository.save(user);
+            logger.info("프로필 이미지 변경 완료");
+        }
+
         return new UserResponseDto(user);
+
     }
 
     @Transactional(readOnly = true)
@@ -121,5 +127,12 @@ public class UserService {
         }
 
         return userResponseDto;
+    }
+
+    private User getUserById(Long userId) {
+
+        return userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND)
+        );
     }
 }

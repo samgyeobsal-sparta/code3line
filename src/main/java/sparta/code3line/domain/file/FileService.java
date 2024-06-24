@@ -69,7 +69,7 @@ public class FileService {
     }
 
     // 먼저 파일 업로드시, 파일명을 난수화하기 위해 UUID 를 활용하여 난수를 돌린다.
-    public String createFileName(String fileName){
+    private String createFileName(String fileName){
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 

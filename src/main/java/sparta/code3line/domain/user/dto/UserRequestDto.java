@@ -12,6 +12,7 @@ public class UserRequestDto {
     private String password;
     private String email;
     private String nickname;
+    private String profileImg;
 
     //새로운 비밀번호
     @NotBlank(message = " newpassword는 비워둘 수 없습니다.")

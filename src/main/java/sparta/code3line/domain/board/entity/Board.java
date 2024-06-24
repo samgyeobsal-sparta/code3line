@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import sparta.code3line.common.Timestamp;
 import sparta.code3line.domain.user.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -30,6 +33,9 @@ public class Board extends Timestamp {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BoardType type;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardFiles> boardFiles = new ArrayList<>();
 
     @Builder
     public Board(User user, String title, String contents, BoardType type) {
