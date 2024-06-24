@@ -4,8 +4,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "dlskdud123",
-  "password": "dlskdud123@"
+  "username": "dlskdud124",
+  "password": "dlskdud124@"
 }
 
 > {%
@@ -48,3 +48,15 @@ Content-Type: application/json
   "email": "dlskdud123@gmail.com",
   "code":"13TZDT5Y"
 }
+
+### 토큰 재발급
+POST http://localhost:8080/auth/reissue
+Content-Type: application/json
+
+{
+  "token": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkbHNrZHVkMTI0IiwiaWF0IjoxNzE5MjI4NTYzLCJleHAiOjE3MTkyMjg2ODN9.A98Muh5iubZWZ8BYEZckMWbaHg9jtjSJcOzpd9ig5ek"
+}
+
+> {%
+    client.global.set("access_token", response.body.result);
+%}
