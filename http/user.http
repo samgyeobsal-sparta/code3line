@@ -1,0 +1,26 @@
+### 프로필 조회
+GET http://localhost:8080/profiles
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+
+### 프로필 닉네임 수정
+PATCH http://localhost:8080/profiles/7
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "username": "username6",
+  "nickname" : "수정"
+}
+
+### 프로필 비밀번호 수정
+PATCH http://localhost:8080/profiles/7/pw
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "username" : "username6",
+  "password" : "passWord1236!",
+  "newpassword" :"dlskdud127@"
+}
