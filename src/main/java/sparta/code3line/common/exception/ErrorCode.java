@@ -27,6 +27,11 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCH(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
     NOT_VERIFIED(HttpStatus.FORBIDDEN, "검증이 되지 않은 사용자입니다."),
     ALREADY_DELETED(HttpStatus.FORBIDDEN, "이미 탈퇴된 사용자입니다."),
+    ALREADY_BLOCK(HttpStatus.FORBIDDEN, "이미 차단된 사용자입니다."),
+    ALREADY_ADMIN(HttpStatus.FORBIDDEN, "이미 관리자로 변경된 사용자입니다."),
+    NOT_DELETED(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다."),
+    NOT_BLOCK(HttpStatus.BAD_REQUEST, "차단 권한이 없습니다."),
+    NOT_ADMIN(HttpStatus.BAD_REQUEST, "변경 권한이 없습니다."),
 
     // follow
     ALREADY_FOLLOW(HttpStatus.BAD_REQUEST,"이미 팔로우했습니다."),
