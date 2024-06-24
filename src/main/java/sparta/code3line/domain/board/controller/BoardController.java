@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
@@ -26,10 +27,10 @@ public class BoardController {
     @PostMapping("/boards")
     public ResponseEntity<CommonResponse<BoardResponseDto>> addBoard(
             @Valid @RequestBody BoardRequestDto requestDto,
+            @RequestPart List<MultipartFile> fileList,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-
-        BoardResponseDto responseDto = boardService.addBoard(userPrincipal.getUser(), requestDto);
+        BoardResponseDto responseDto = boardService.addBoard(userPrincipal.getUser(), requestDto, fileList);
         CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
                 "게시글 등록 성공",
                 HttpStatus.CREATED.value(),
@@ -116,10 +117,11 @@ public class BoardController {
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long boardId,
-            @Valid @RequestBody BoardUpdateRequestDto requestDto
+            @Valid @RequestBody BoardUpdateRequestDto requestDto,
+            @RequestPart List<MultipartFile> fileList
     ) {
 
-        BoardResponseDto responseDto = boardService.updateBoard(userPrincipal.getUser(), boardId, requestDto);
+        BoardResponseDto responseDto = boardService.updateBoard(userPrincipal.getUser(), boardId, requestDto, fileList);
         CommonResponse<BoardResponseDto> commonResponse = new CommonResponse<>(
                 "게시글 수정 완료",
                 HttpStatus.OK.value(),

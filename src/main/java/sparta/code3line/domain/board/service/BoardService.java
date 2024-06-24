@@ -4,13 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.exception.CustomException;
 import sparta.code3line.common.exception.ErrorCode;
 import sparta.code3line.domain.board.dto.BoardRequestDto;
 import sparta.code3line.domain.board.dto.BoardResponseDto;
 import sparta.code3line.domain.board.dto.BoardUpdateRequestDto;
 import sparta.code3line.domain.board.entity.Board;
+import sparta.code3line.domain.board.entity.BoardFiles;
+import sparta.code3line.domain.board.repository.BoardFilesRepository;
 import sparta.code3line.domain.board.repository.BoardRepository;
+import sparta.code3line.domain.file.FileService;
 import sparta.code3line.domain.follow.entity.Follow;
 import sparta.code3line.domain.follow.repository.FollowRepository;
 import sparta.code3line.domain.user.entity.User;
@@ -26,6 +31,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final FollowRepository followRepository;
+    private final FileService fileService;
+    private final BoardFilesRepository boardFilesRepository;
 
     // USER에 해당하는 게시글 찾아오기
     public Board getBoard(User user, Long boardId) {
@@ -44,8 +51,13 @@ public class BoardService {
 
     }
 
-    // 게시글 추가
-    public BoardResponseDto addBoard(User user, BoardRequestDto requestDto) {
+    // 게시글 추가 메서드.
+    public BoardResponseDto addBoard(
+            User user,
+            BoardRequestDto requestDto,
+            List<MultipartFile> fileList) {
+
+        log.info("addBoard 메서드 실행");
 
         Board board = Board.builder()
                 .user(user)
@@ -54,9 +66,29 @@ public class BoardService {
                 .type(Board.BoardType.NORMAL)
                 .build();
 
+        if (fileList != null) {
+            addFileonBoard(board, fileList);
+        }
+
         Board addBoard = boardRepository.save(board);
 
         return new BoardResponseDto(addBoard);
+    }
+
+    private void addFileonBoard(Board board, List<MultipartFile> fileList) {
+        if (!fileList.isEmpty()) {
+            List<BoardFiles> boardFiles = new ArrayList<>();
+            List<String> urls = fileService.uploadFile(fileList);
+
+            for (String url : urls) {
+                BoardFiles boardFile = BoardFiles.builder()
+                        .file(url)
+                        .board(board)
+                        .build();
+                boardFiles.add(boardFile);
+            }
+            boardFilesRepository.saveAll(boardFiles);
+        }
     }
 
     // 팔로우 조회
@@ -147,7 +179,8 @@ public class BoardService {
     public BoardResponseDto updateBoard(
             User user,
             Long boardId,
-            BoardUpdateRequestDto requestDto) {
+            BoardUpdateRequestDto requestDto,
+            List<MultipartFile> fileList) {
 
         Board board = getBoard(user, boardId);
 
@@ -158,6 +191,11 @@ public class BoardService {
         if (requestDto.getContent() != null) {
             board.updateContents(requestDto.getContent());
         }
+
+        if (fileList != null) {
+            addFileonBoard(board, fileList);
+        }
+
         boardRepository.save(board);
 
         return new BoardResponseDto(board);

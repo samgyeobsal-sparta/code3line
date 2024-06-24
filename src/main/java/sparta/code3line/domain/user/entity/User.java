@@ -36,6 +36,9 @@ public class User extends Timestamp {
     @Column
     private String socialId;
 
+    @Column(name = "profile_img")
+    private String profileImg;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -59,6 +62,10 @@ public class User extends Timestamp {
         this.socialId = socialId;
         this.role = role;
         this.status = status;
+    }
+
+    public void updateProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
 
     public void updateStatus(Status status) {

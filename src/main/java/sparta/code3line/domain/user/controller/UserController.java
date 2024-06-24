@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sparta.code3line.common.CommonResponse;
 import sparta.code3line.domain.user.dto.UserRequestDto;
 import sparta.code3line.domain.user.dto.UserResponseDto;
@@ -92,12 +93,14 @@ public class UserController {
 
     }
 
-    // USER : 프로필 닉네임 수정
+    // 유저 프로필 수정
     @PatchMapping("/profiles/{userId}")
     public ResponseEntity<CommonResponse<UserResponseDto>> updateProfilesNickname(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long userId,
-            @RequestBody UserRequestDto userRequestDto) {
+            @RequestBody UserRequestDto userRequestDto,
+            @RequestPart List<MultipartFile> fileList)
+    {
 
         User currentUser = userPrincipal.getUser();
 
@@ -105,11 +108,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        UserResponseDto response = userService.updateProfilesNickname(userId, userRequestDto);
         CommonResponse<UserResponseDto> commonResponse = new CommonResponse<>(
                 "프로필 닉네임 변경 성공 🎉",
                 HttpStatus.OK.value(),
-                response);
+                userService.updateProfiles(userId, userRequestDto, fileList));
 
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
 

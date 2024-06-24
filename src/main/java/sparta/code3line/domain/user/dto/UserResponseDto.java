@@ -12,6 +12,7 @@ public class UserResponseDto {
     private String roleName;
     private String nickname;
     private String email;
+    private String profileImg;
     private List<User> allUsers;
 
     public UserResponseDto(User user){
@@ -19,6 +20,7 @@ public class UserResponseDto {
         this.roleName = user.getRole().getRoleName();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
+        this.profileImg = user.getProfileImg();
         this.allUsers = null;
     }
 
