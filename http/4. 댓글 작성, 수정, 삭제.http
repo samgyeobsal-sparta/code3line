@@ -1,0 +1,50 @@
+### 2-1. 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "username2",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 4-1. 댓글 생성 1
+POST http://localhost:8080/2/comment
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "contents": "content"
+}
+
+### 4-1. 댓글 생성 2
+POST http://localhost:8080/2/comment
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "contents": "content double"
+}
+
+### 4-2. 댓글 전체 조회
+GET http://localhost:8080/2/comments
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 4-3. 댓글 수정
+PUT http://localhost:8080/2/comment/1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "contents": "content2"
+}
+
+### 4-4. 댓글 삭제
+DELETE http://localhost:8080/2/comment/1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

@@ -1,0 +1,23 @@
+
+### 팔로우
+POST http://localhost:8080/follows
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "following_user_id": 4
+}
+
+### 언팔로우
+DELETE http://localhost:8080/follows
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "following_user_id": 2
+}
+
+### 팔로우 조회
+GET http://localhost:8080/boards/follows
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

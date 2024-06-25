@@ -1,0 +1,62 @@
+
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "dlskdud124",
+  "password": "dlskdud124@"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 로그인2 - 테스트
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "username",
+  "password": "password123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 로그아웃
+PATCH http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 이메일 전송
+POST http://localhost:8080/users/email
+Content-Type: application/json
+
+{
+  "email": "dlskdud123@gmail.com"
+}
+
+### 이메일 검증
+PUT http://localhost:8080/users/email/verification
+Content-Type: application/json
+
+{
+  "email": "dlskdud123@gmail.com",
+  "code":"13TZDT5Y"
+}
+
+### 토큰 재발급
+POST http://localhost:8080/auth/reissue
+Content-Type: application/json
+
+{
+  "token": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkbHNrZHVkMTI0IiwiaWF0IjoxNzE5MjI4NTYzLCJleHAiOjE3MTkyMjg2ODN9.A98Muh5iubZWZ8BYEZckMWbaHg9jtjSJcOzpd9ig5ek"
+}
+
+> {%
+    client.global.set("access_token", response.body.result);
+%}

@@ -1,0 +1,59 @@
+
+### 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "username1",
+  "password" : "pass1234!",
+  "email": "helloworld1@gmail.com",
+  "nickname": "nickname"
+}
+
+### 회원가입2
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "username2",
+  "password": "pass1234!",
+  "email": "helloworld2@gmail.com",
+  "nickname": "nickname"
+}
+
+### 회원가입3
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username": "username3",
+  "password": "pass1234!",
+  "email": "helloworld3@gmail.com",
+  "nickname": "code3line"
+}
+
+### ADMIN : 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "pass1234!",
+  "email" : "admin@gmail.com",
+  "nickname" : "admin",
+  "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
+
+}
+
+### ADMIN : 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "username" : "username1",
+  "password" : "password123!",
+  "email" : "username@gmail.com",
+  "nickname" : "관리자",
+  "admin" : "zhemtpwnfdpsmseoajflrkdlTek"
+
+}

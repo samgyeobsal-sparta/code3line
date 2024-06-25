@@ -1,0 +1,33 @@
+### 2-1. 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "username3",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 게시글 좋아요
+POST http://localhost:8080/boards/2/likes
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 게시글 좋아요 취소
+DELETE http://localhost:8080/boards/2/likes
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 댓글 좋아요
+POST http://localhost:8080/comments/2/likes
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 댓글 좋아요 취소
+DELETE http://localhost:8080/comments/2/likes
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

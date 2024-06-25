@@ -1,0 +1,25 @@
+### 2-1. 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "username2",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.accessToken);
+    client.global.set("refresh_token", response.body.result.refreshToken);
+%}
+
+### 7-1. 프로필 닉네임 수정(닉네임만 수정 가능) -> multifile 작동 안 됨!!! Postman으로 확인!
+
+### 7-2. 프로필 비밀번호 수정
+PATCH http://localhost:8080/profiles/2/pw
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "password" : "passWord123!",
+  "newpassword" :"passWord125!"
+}
