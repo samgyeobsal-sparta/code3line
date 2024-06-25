@@ -55,7 +55,7 @@
           <img src="https://avatars.githubusercontent.com/u/107848521?v=4" width="100px;" alt=""/><br />
           <sub><b> 팀원 : 이나영 </b></sub>
         </a><br />
-        <a href="https://leenayoung240.github.io/ ">🦍</a>
+        <a href="https://leenayoung240.github.io/ ">🐦</a>
       </td>
       <td align="center">
         <a href="https://github.com/2minus">
